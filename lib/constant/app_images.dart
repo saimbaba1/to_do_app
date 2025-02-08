@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
 
 class AppImages {
-  static const image1 = Image(image: AssetImage(""));
+  static const image1 = "assets/onboarding.png";
 }

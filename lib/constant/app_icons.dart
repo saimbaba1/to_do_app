@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
 
 class AppIcons {
-  static const Icon1 = Icon(Icons.home);
+  static const IconData back = Icons.arrow_circle_left_outlined;
 }
