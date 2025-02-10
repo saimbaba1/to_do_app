@@ -2,23 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:to_do_app/constant/app_colors.dart';
 import 'package:to_do_app/constant/app_icons.dart';
+import 'package:to_do_app/constant/app_images.dart';
 import 'package:to_do_app/user/add_to_do.dart';
-import 'package:to_do_app/view/auth/onboarding_screen.dart';
-import 'package:to_do_app/view/auth/signin_screen.dart';
+import 'package:to_do_app/view/auth/forget_password.dart';
+import 'package:to_do_app/view/auth/signup_screen.dart';
 import 'package:to_do_app/widgets/button/common_button.dart';
 import 'package:to_do_app/widgets/fields/common_textfield.dart';
 
-class SignupScreen extends StatefulWidget {
-  const SignupScreen({super.key});
+class SigninScreen extends StatefulWidget {
+  const SigninScreen({super.key});
 
   @override
-  State<SignupScreen> createState() => _SignupScreenState();
+  State<SigninScreen> createState() => _SigninScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
-  final TextEditingController NameController = TextEditingController();
+class _SigninScreenState extends State<SigninScreen> {
   final TextEditingController EmailController = TextEditingController();
-  final TextEditingController PasswordController = TextEditingController();
   final TextEditingController ComfirmPasswordController =
       TextEditingController();
 
@@ -35,10 +34,8 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
             child: GestureDetector(
               onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => OnboardingScreen()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => SignupScreen()));
               },
               child: Icon(
                 size: 34.h,
@@ -51,7 +48,7 @@ class _SignupScreenState extends State<SignupScreen> {
             height: 79.h,
           ),
           Text(
-            "Welcome Onboard!",
+            "Welcome Back!",
             style: TextStyle(
                 color: AppColors.color3,
                 fontWeight: FontWeight.w600,
@@ -59,24 +56,11 @@ class _SignupScreenState extends State<SignupScreen> {
                 fontFamily: "Poppins"),
           ),
           SizedBox(
-            height: 18.h,
+            height: 21.h,
           ),
-          Text(
-            textAlign: TextAlign.center,
-            "Let’s help you meet up your task",
-            style: TextStyle(
-                color: AppColors.color1,
-                fontWeight: FontWeight.w500,
-                fontSize: 13.sp,
-                fontFamily: "Poppins"),
-          ),
+          Image.asset(AppImages.image2),
           SizedBox(
-            height: 70.h,
-          ),
-          CommonTextfield(
-              hintText: "Enter your Full Name", controller: NameController),
-          SizedBox(
-            height: 20.h,
+            height: 15.h,
           ),
           CommonTextfield(
               hintText: "Enter your Email address",
@@ -85,15 +69,34 @@ class _SignupScreenState extends State<SignupScreen> {
             height: 20.h,
           ),
           CommonTextfield(
-              hintText: "Create a Password", controller: NameController),
-          SizedBox(
-            height: 20.h,
-          ),
-          CommonTextfield(
-              hintText: "Confirm your Password",
+              hintText: "Confirm Password",
               controller: ComfirmPasswordController),
           SizedBox(
-            height: 80.h,
+            height: 40.h,
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => SigninScreen()));
+            },
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => ForgetPassword()));
+              },
+              child: Text(
+                textAlign: TextAlign.center,
+                "Forgot Password ?",
+                style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 15.sp,
+                    color: AppColors.color1,
+                    fontFamily: "Poppins"),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 40.h,
           ),
           CommonButton(
               title: "Sign Up ",
@@ -109,7 +112,7 @@ class _SignupScreenState extends State<SignupScreen> {
             children: [
               Text(
                 textAlign: TextAlign.center,
-                "Already have an account?",
+                "Dont have an account?",
                 style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 15.sp,
@@ -118,11 +121,11 @@ class _SignupScreenState extends State<SignupScreen> {
               GestureDetector(
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => SigninScreen()));
+                      MaterialPageRoute(builder: (context) => SignupScreen()));
                 },
                 child: Text(
                   textAlign: TextAlign.center,
-                  " Sign in",
+                  " Sign Up",
                   style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 15.sp,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:to_do_app/view/auth/onboarding_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -12,7 +13,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 2), () {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const OnboardingScreen()),
@@ -29,8 +30,8 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              "ONBOARDING",
-              style: TextStyle(fontSize: 30),
+              "TO DO APP",
+              style: TextStyle(fontSize: 30.sp, fontFamily: "Poppins"),
             )
           ],
         ),
