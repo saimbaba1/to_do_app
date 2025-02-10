@@ -2,8 +2,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:to_do_app/constant/app_colors.dart';
 import 'package:to_do_app/constant/app_images.dart';
+import 'package:to_do_app/user/add_to_do.dart';
+import 'package:to_do_app/user/add_to_title.dart';
 
 class AddToHome extends StatefulWidget {
   const AddToHome({super.key});
@@ -50,8 +53,10 @@ class _AddToHomeState extends State<AddToHome> {
               Container(
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    fit: BoxFit.contain,
-                    image: AssetImage(AppImages.image4),
+                    fit: BoxFit.cover,
+                    image: AssetImage(
+                      AppImages.image4,
+                    ),
                   ),
                 ),
                 height: 300.h,
@@ -61,6 +66,7 @@ class _AddToHomeState extends State<AddToHome> {
                 bottom: 120.h,
                 child: CircleAvatar(
                   radius: 60.r,
+                  backgroundColor: Color(0xff70968f),
                   backgroundImage: AssetImage(AppImages.image5),
                 ),
               ),
@@ -96,7 +102,10 @@ class _AddToHomeState extends State<AddToHome> {
               physics: NeverScrollableScrollPhysics(),
               itemBuilder: (BuildContext context, index) {
                 return GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => AddToTitle()));
+                  },
                   child: Padding(
                     padding: EdgeInsets.only(
                       left: 10.w,
@@ -113,7 +122,7 @@ class _AddToHomeState extends State<AddToHome> {
                             title: Column(
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.only(right: 160.h),
+                                  padding: EdgeInsets.only(right: 220.h),
                                   child: Text(
                                     data[index]['title'],
                                     style: TextStyle(
@@ -123,7 +132,7 @@ class _AddToHomeState extends State<AddToHome> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(right: 70.h),
+                                  padding: EdgeInsets.only(right: 140.h),
                                   child: Text(
                                     data[index]['des'],
                                     style: TextStyle(
@@ -146,6 +155,19 @@ class _AddToHomeState extends State<AddToHome> {
                   ),
                 );
               }),
+          Padding(
+            padding: EdgeInsets.only(top: 130.h, left: 310.w),
+            child: GestureDetector(
+              onTap: () {
+                Get.to(AddToDo());
+              },
+              child: Icon(
+                Icons.add_circle,
+                color: AppColors.color1,
+                size: 90.sp,
+              ),
+            ),
+          )
         ],
       ),
     );

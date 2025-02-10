@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:to_do_app/constant/app_colors.dart';
 import 'package:to_do_app/constant/app_icons.dart';
 import 'package:to_do_app/constant/app_images.dart';
-import 'package:to_do_app/user/add_to_do.dart';
 import 'package:to_do_app/view/auth/signin_screen.dart';
-import 'package:to_do_app/view/auth/signup_screen.dart';
 import 'package:to_do_app/widgets/button/common_button.dart';
 import 'package:to_do_app/widgets/fields/common_textfield.dart';
 
@@ -71,8 +70,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
           CommonButton(
               title: "Forgot",
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => SigninScreen()));
+                Get.to(SigninScreen());
               }),
           SizedBox(
             height: 40.h,

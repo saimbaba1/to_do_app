@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:to_do_app/constant/app_colors.dart';
 import 'package:to_do_app/constant/app_icons.dart';
 import 'package:to_do_app/constant/app_images.dart';
 import 'package:to_do_app/user/add_to_home.dart';
-import 'package:to_do_app/view/auth/signin_screen.dart';
 import 'package:to_do_app/widgets/button/common_button.dart';
 import 'package:to_do_app/widgets/fields/common_textfield.dart';
 
@@ -31,8 +31,7 @@ class _AddToDoState extends State<AddToDo> {
             ),
             child: GestureDetector(
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => SigninScreen()));
+                Get.back();
               },
               child: Icon(
                 size: 34.h,
@@ -45,7 +44,7 @@ class _AddToDoState extends State<AddToDo> {
             height: 79.h,
           ),
           Text(
-            "Welcome Onboard!",
+            "Add New ToDo",
             style: TextStyle(
                 color: AppColors.color3,
                 fontWeight: FontWeight.w600,
@@ -86,8 +85,7 @@ class _AddToDoState extends State<AddToDo> {
           CommonButton(
               title: "Add to list",
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AddToHome()));
+                Get.to(AddToHome());
               }),
           SizedBox(
             height: 40.h,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:to_do_app/constant/app_colors.dart';
 import 'package:to_do_app/constant/app_icons.dart';
 import 'package:to_do_app/constant/app_images.dart';
@@ -34,8 +35,7 @@ class _SigninScreenState extends State<SigninScreen> {
             ),
             child: GestureDetector(
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => SignupScreen()));
+                Get.back();
               },
               child: Icon(
                 size: 34.h,
@@ -120,8 +120,7 @@ class _SigninScreenState extends State<SigninScreen> {
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => SignupScreen()));
+                  Get.to(SignupScreen());
                 },
                 child: Text(
                   textAlign: TextAlign.center,

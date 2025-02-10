@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:to_do_app/constant/app_colors.dart';
 import 'package:to_do_app/constant/app_images.dart';
 import 'package:to_do_app/view/auth/signup_screen.dart';
@@ -49,8 +50,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: CommonButton(
                 title: 'Get Started',
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => SignupScreen()));
+                  Get.to(SignupScreen());
                 },
               ),
             ),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:to_do_app/constant/app_colors.dart';
 import 'package:to_do_app/constant/app_icons.dart';
 import 'package:to_do_app/user/add_to_do.dart';
-import 'package:to_do_app/view/auth/onboarding_screen.dart';
 import 'package:to_do_app/view/auth/signin_screen.dart';
 import 'package:to_do_app/widgets/button/common_button.dart';
 import 'package:to_do_app/widgets/fields/common_textfield.dart';
@@ -35,10 +35,7 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
             child: GestureDetector(
               onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => OnboardingScreen()));
+                Get.back();
               },
               child: Icon(
                 size: 34.h,
@@ -117,8 +114,7 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => SigninScreen()));
+                  Get.to(SigninScreen());
                 },
                 child: Text(
                   textAlign: TextAlign.center,
