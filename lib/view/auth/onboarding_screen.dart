@@ -50,7 +50,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: CommonButton(
                 title: 'Get Started',
                 onTap: () {
-                  Get.to(() => SignupScreen());
+                  try {
+                    Get.to(() => SignupScreen());
+                  } catch (e) {
+                    print(e.toString());
+                  }
                 },
               ),
             ),
