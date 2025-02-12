@@ -16,81 +16,108 @@ class AddToDo extends StatefulWidget {
 }
 
 class _AddToDoState extends State<AddToDo> {
+  final _formKey = GlobalKey<FormState>();
+
   final TextEditingController TitleController = TextEditingController();
   final TextEditingController DescriptionController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.color4,
-      body: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(
-              top: 60.h,
-              right: 324.w,
-            ),
-            child: GestureDetector(
-              onTap: () {
-                Get.back();
-              },
-              child: Icon(
-                size: 34.h,
-                AppIcons.back,
-                color: AppColors.color3,
+      body: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(
+                  top: 60.h,
+                  right: 324.w,
+                ),
+                child: GestureDetector(
+                  onTap: () {
+                    Get.back();
+                  },
+                  child: Icon(
+                    size: 34.h,
+                    AppIcons.back,
+                    color: AppColors.color3,
+                  ),
+                ),
               ),
-            ),
+              SizedBox(
+                height: 79.h,
+              ),
+              Text(
+                "Add New ToDo",
+                style: TextStyle(
+                    color: AppColors.color3,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20.sp,
+                    fontFamily: "Poppins"),
+              ),
+              SizedBox(
+                height: 21.h,
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 50.w),
+                child: Image.asset(AppImages.image3),
+              ),
+              SizedBox(
+                height: 15.h,
+              ),
+              Text(
+                textAlign: TextAlign.center,
+                "Add What your want to do later on..",
+                style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 15.sp,
+                    color: AppColors.color1,
+                    fontFamily: "Poppins"),
+              ),
+              SizedBox(
+                height: 20.h,
+              ),
+              CommonTextfield(
+                hintText: "Title",
+                controller: TitleController,
+                validator: (value) {
+                  if (value == '' || value == null) {
+                    return 'Please enter your title';
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 20.h,
+              ),
+              CommonTextfield(
+                hintText: "Description",
+                controller: DescriptionController,
+                validator: (value) {
+                  if (value == '' || value == null) {
+                    return 'Please enter your Description';
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 40.h,
+              ),
+              CommonButton(
+                title: "Add to list",
+                onTap: () {
+                  if (_formKey.currentState!.validate()) {
+                    Get.to(() => AddToHome());
+                  }
+                },
+              ),
+              SizedBox(
+                height: 40.h,
+              ),
+            ],
           ),
-          SizedBox(
-            height: 79.h,
-          ),
-          Text(
-            "Add New ToDo",
-            style: TextStyle(
-                color: AppColors.color3,
-                fontWeight: FontWeight.w600,
-                fontSize: 20.sp,
-                fontFamily: "Poppins"),
-          ),
-          SizedBox(
-            height: 21.h,
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 50.w),
-            child: Image.asset(AppImages.image3),
-          ),
-          SizedBox(
-            height: 15.h,
-          ),
-          Text(
-            textAlign: TextAlign.center,
-            "Add What your want to do later on..",
-            style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 15.sp,
-                color: AppColors.color1,
-                fontFamily: "Poppins"),
-          ),
-          SizedBox(
-            height: 20.h,
-          ),
-          CommonTextfield(hintText: "Title", controller: TitleController),
-          SizedBox(
-            height: 20.h,
-          ),
-          CommonTextfield(
-              hintText: "Description", controller: DescriptionController),
-          SizedBox(
-            height: 40.h,
-          ),
-          CommonButton(
-              title: "Add to list",
-              onTap: () {
-                Get.to(AddToHome());
-              }),
-          SizedBox(
-            height: 40.h,
-          ),
-        ],
+        ),
       ),
     );
   }

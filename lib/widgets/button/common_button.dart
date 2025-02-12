@@ -1,34 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:to_do_app/constant/app_colors.dart';
 
-class CommonButton extends StatefulWidget {
+class CommonButton extends StatelessWidget {
   final String title;
   final VoidCallback onTap;
-  const CommonButton({super.key, required this.title, required this.onTap});
+  final bool isLoading;
+  const CommonButton({
+    super.key,
+    required this.title,
+    required this.onTap,
+    this.isLoading = false,
+  });
 
-  @override
-  State<CommonButton> createState() => _CommonButtonState();
-}
-
-class _CommonButtonState extends State<CommonButton> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: widget.onTap,
+      onTap: onTap,
       child: Container(
-          height: 50,
-          width: 220,
+          height: 50.h,
+          width: 220.w,
           color: AppColors.color1,
-          child: Center(
-            child: Text(
-              widget.title,
-              style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 14,
+          alignment: Alignment.center,
+          child: isLoading == true
+              ? CircularProgressIndicator(
                   color: AppColors.color2,
-                  fontFamily: "Poppins"),
-            ),
-          )),
+                )
+              : Text(
+                  title,
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14.sp,
+                      color: AppColors.color2,
+                      fontFamily: "Poppins"),
+                )),
     );
   }
 }

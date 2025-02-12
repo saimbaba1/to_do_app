@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:to_do_app/constant/app_colors.dart';
 
 class CommonTextfield extends StatefulWidget {
+  final String? Function(String?)? validator;
   final String hintText;
   final TextEditingController controller;
 
@@ -9,6 +10,7 @@ class CommonTextfield extends StatefulWidget {
     super.key,
     required this.hintText,
     required this.controller,
+    this.validator,
   });
 
   @override
@@ -20,7 +22,8 @@ class _CommonTextfieldState extends State<CommonTextfield> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 18, right: 17),
-      child: TextField(
+      child: TextFormField(
+        validator: widget.validator,
         controller: widget.controller,
         enabled: true,
         decoration: InputDecoration(

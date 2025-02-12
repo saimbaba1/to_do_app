@@ -1,32 +1,13 @@
 {
   "project_info": {
-    "project_number": "819217289088",
-    "project_id": "learning-af54b",
-    "storage_bucket": "learning-af54b.firebasestorage.app"
+    "project_number": "956206134193",
+    "project_id": "todoapp-8c4b4",
+    "storage_bucket": "todoapp-8c4b4.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:819217289088:android:bc616e7cbbf862c332bb65",
-        "android_client_info": {
-          "package_name": "com.example.learning2"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBv6f4MpVf9f1l9n3K05_0_0xQL40Q8zUw"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:819217289088:android:16fa78a1ad9aade032bb65",
+        "mobilesdk_app_id": "1:956206134193:android:13de18fc092934604bc390",
         "android_client_info": {
           "package_name": "com.example.to_do_app"
         }
@@ -34,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBv6f4MpVf9f1l9n3K05_0_0xQL40Q8zUw"
+          "current_key": "AIzaSyBY6Ipe5sipj2uD3DNwKV_8GmGglUE5Zd4"
         }
       ],
       "services": {
