@@ -88,16 +88,21 @@ class _ForgetPasswordState extends State<ForgetPassword> {
               CommonButton(
                 title: "Forgot",
                 onTap: () async {
-                  if (_formKey.currentState!.validate()) {
-                    setState(() {
-                      isLoadingg = true;
-                    });
-                    await FirebaseAuth.instance
-                        .sendPasswordResetEmail(email: ForgetController.text);
-                    Get.to(() => SignupScreen());
-                    setState(() {
-                      isLoadingg = false;
-                    });
+                  try {
+                    if (_formKey.currentState!.validate()) {
+                      setState(() {
+                        isLoadingg = true;
+                      });
+                      await FirebaseAuth.instance
+                          .sendPasswordResetEmail(email: ForgetController.text);
+                      Get.to(() => SignupScreen());
+                      setState(() {
+                        isLoadingg = false;
+                      });
+                    }
+                  } catch (e) {
+                    Get.snackbar('Error', e.toString(),
+                        backgroundColor: Colors.red);
                   }
                 },
               ),
