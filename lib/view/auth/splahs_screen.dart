@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:to_do_app/user/add_to_home.dart';
 import 'package:to_do_app/view/auth/onboarding_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -11,14 +13,27 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   @override
-  Future<void> initState() async {
+  void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 2), () {
+    _navigateToNextScreen();
+  }
+
+  _navigateToNextScreen() async {
+    await Future.delayed(Duration(seconds: 3));
+
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const OnboardingScreen()),
+        MaterialPageRoute(builder: (context) => OnboardingScreen()),
       );
-    });
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => AddToHome()),
+      );
+    }
   }
 
   @override

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -137,18 +138,33 @@ class _SignupScreenState extends State<SignupScreen> {
                         setState(() {
                           isLoadingg = true;
                         });
+                        User? user = FirebaseAuth.instance.currentUser;
 
                         await FirebaseAuth.instance
                             .createUserWithEmailAndPassword(
                                 email: EmailController.text,
                                 password: PasswordController.text);
+                        DocumentReference docRef = FirebaseFirestore.instance
+                            .collection('userprofile')
+                            .doc();
+                        await docRef.set({
+                          'email': EmailController.text,
+                          'name': NameController.text,
+                          "userid": user!.uid.toString(),
+                          'password': PasswordController.text,
+                          'image': '',
+                        });
+
                         Get.to(() => AddToDo());
                         setState(() {
                           isLoadingg = false;
                         });
                       }
                     } catch (e) {
-                      print(e.toString());
+                      Get.snackbar('error', e.toString());
+                      setState(() {
+                        isLoadingg = false;
+                      });
                     }
                   }),
               SizedBox(
