@@ -123,7 +123,7 @@ class _AddToDoState extends State<AddToDo> {
                           'docid': docRef.id,
                           'title': TitleController.text,
                           'description': DescriptionController.text,
-                          'time': DateTime.now(),
+                          'time': DateTime.now().toString(),
                           "userid": user!.uid.toString()
                         });
                         setState(() {
