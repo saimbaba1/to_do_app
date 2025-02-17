@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:to_do_app/constant/app_colors.dart';
 import 'package:to_do_app/constant/app_icons.dart';
+import 'package:to_do_app/user/add_to_do_update.dart';
 
 class AddToTitle extends StatefulWidget {
   const AddToTitle({super.key});
@@ -14,23 +15,40 @@ class AddToTitle extends StatefulWidget {
 class _AddToTitleState extends State<AddToTitle> {
   @override
   Widget build(BuildContext context) {
+    final arguments = Get.arguments;
+
     return Scaffold(
+      backgroundColor: AppColors.color4,
       body: Column(
         children: [
           Padding(
-            padding: EdgeInsets.only(
-              top: 60.h,
-              right: 350.w,
-            ),
-            child: GestureDetector(
-              onTap: () {
-                Get.back();
-              },
-              child: Icon(
-                size: 34.h,
-                AppIcons.back,
-                color: AppColors.color3,
-              ),
+            padding: EdgeInsets.only(top: 60.h, left: 10.w),
+            child: Row(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Get.back();
+                  },
+                  child: Icon(
+                    size: 34.h,
+                    AppIcons.back,
+                    color: AppColors.color3,
+                  ),
+                ),
+                SizedBox(
+                  width: 330.w,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Get.to(AddToDoUpdate());
+                  },
+                  child: Icon(
+                    size: 34.h,
+                    AppIcons.update,
+                    color: AppColors.color3,
+                  ),
+                ),
+              ],
             ),
           ),
           SizedBox(
@@ -39,7 +57,7 @@ class _AddToTitleState extends State<AddToTitle> {
           Padding(
             padding: EdgeInsets.only(right: 200.w),
             child: Text(
-              "Tittle of your Task",
+              arguments['title'],
               style: TextStyle(
                   color: AppColors.color3,
                   fontWeight: FontWeight.w600,
@@ -50,7 +68,7 @@ class _AddToTitleState extends State<AddToTitle> {
           Padding(
             padding: EdgeInsets.only(left: 20.w, right: 20.w),
             child: Divider(
-              thickness: 1.3,
+              thickness: 0.1,
               color: AppColors.color3,
             ),
           ),
@@ -58,7 +76,7 @@ class _AddToTitleState extends State<AddToTitle> {
             padding: EdgeInsets.only(left: 11.w, right: 11.w, top: 20.h),
             child: Text(
               textAlign: TextAlign.center,
-              "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncove",
+              arguments['description'],
               style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 15.sp,

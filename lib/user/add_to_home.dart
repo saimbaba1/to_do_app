@@ -22,27 +22,9 @@ class _AddToHomeState extends State<AddToHome> {
   final Random _random = Random();
 
   Color _getRandomColor() {
-    List<Color> colors = [
-      //your colors
-      AppColors.color5,
-      AppColors.color6,
-      AppColors.color7
-    ];
+    List<Color> colors = [AppColors.color5, AppColors.color6, AppColors.color7];
     return colors[_random.nextInt(colors.length)];
   }
-
-  final List<Map<String, dynamic>> data = [
-    {"title": "Saim", "des": 'description is this', "time": "3:40 pm"},
-    {"title": "Saim", "des": 'description is this', "time": "3:40 pm"},
-    {"title": "Saim", "des": 'description is this', "time": "3:40 pm"},
-  ];
-
-  final List<Color> colors = [
-    AppColors.color5,
-    AppColors.color6,
-    AppColors.color7
-  ];
-  final List<String> items = List.generate(20, (index) => 'Item ${index + 1}');
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +59,7 @@ class _AddToHomeState extends State<AddToHome> {
                 Padding(
                   padding: EdgeInsets.only(top: 130.h),
                   child: Text(
-                    "Welcome Fisayomi",
+                    "Welcome Saim Baba",
                     style: TextStyle(
                       color: AppColors.color3,
                       fontWeight: FontWeight.w600,
@@ -100,8 +82,8 @@ class _AddToHomeState extends State<AddToHome> {
                 ),
               ),
             ),
-            FutureBuilder(
-              future: FirebaseFirestore.instance.collection('todo').get(),
+            StreamBuilder(
+              stream: FirebaseFirestore.instance.collection('todo').snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return CircularProgressIndicator();
@@ -113,50 +95,66 @@ class _AddToHomeState extends State<AddToHome> {
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       itemBuilder: (BuildContext context, index) {
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => AddToTitle()));
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                              left: 10.w,
-                              right: 10.w,
-                            ),
-                            child: Card(
-                              color: _getRandomColor(),
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15)),
-                              child: Padding(
-                                padding:
-                                    EdgeInsets.only(top: 10.h, bottom: 10.h),
-                                child: ListTile(
-                                    title: Text(
-                                      snapshot.data!.docs[index]['title'],
+                        return Padding(
+                          padding: EdgeInsets.only(
+                            left: 10.w,
+                            right: 10.w,
+                          ),
+                          child: Card(
+                            color: _getRandomColor(),
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15)),
+                            child: Padding(
+                              padding: EdgeInsets.only(top: 10.h, bottom: 10.h),
+                              child: ListTile(
+                                  onTap: () {
+                                    Get.to(AddToTitle(), arguments: {
+                                      'title': snapshot.data!.docs[index]
+                                          ['title'],
+                                      'description': snapshot.data!.docs[index]
+                                          ['description'],
+                                    });
+                                  },
+                                  leading: GestureDetector(
+                                    onTap: () async {
+                                      final String docid = snapshot
+                                          .data!.docs[index]['docid']
+                                          .toString();
+                                      await FirebaseFirestore.instance
+                                          .collection('todo')
+                                          .doc(docid)
+                                          .delete();
+                                    },
+                                    child: CircleAvatar(
+                                      backgroundColor: AppColors.color8,
+                                      child: Icon(AppIcons.delete),
+                                    ),
+                                  ),
+                                  title: Text(
+                                    snapshot.data!.docs[index]['title'],
+                                    style: TextStyle(
+                                        fontSize: 13,
+                                        fontFamily: "Poppins",
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                  subtitle: Text(
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    snapshot.data!.docs[index]['description'],
+                                    style: TextStyle(
+                                        fontSize: 13,
+                                        fontFamily: "Poppins",
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                  trailing: Text(
                                       style: TextStyle(
-                                          fontSize: 13,
+                                          fontSize: 10,
                                           fontFamily: "Poppins",
                                           fontWeight: FontWeight.w700),
-                                    ),
-                                    subtitle: Text(
-                                      snapshot.data!.docs[index]['description'],
-                                      style: TextStyle(
-                                          fontSize: 13,
-                                          fontFamily: "Poppins",
-                                          fontWeight: FontWeight.w700),
-                                    ),
-                                    trailing: Text(
-                                        style: TextStyle(
-                                            fontSize: 10,
-                                            fontFamily: "Poppins",
-                                            fontWeight: FontWeight.w700),
-                                        DateTimeUtil.formatTime(
-                                          snapshot.data!.docs[index]['time'],
-                                        ))),
-                              ),
+                                      DateTimeUtil.formatTime(
+                                        snapshot.data!.docs[index]['time'],
+                                      ))),
                             ),
                           ),
                         );
