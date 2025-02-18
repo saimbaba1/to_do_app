@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:to_do_app/constant/app_colors.dart';
 import 'package:to_do_app/constant/app_icons.dart';
 import 'package:to_do_app/constant/app_images.dart';
-import 'package:to_do_app/user/add_to_home.dart';
+import 'package:to_do_app/view/user/home_scree.dart';
 import 'package:to_do_app/widgets/button/common_button.dart';
 import 'package:to_do_app/widgets/fields/common_textfield.dart';
 
@@ -108,36 +108,7 @@ class _AddToDoState extends State<AddToDo> {
                 height: 40.h,
               ),
               CommonButton(
-                  isLoading: isLoading,
-                  title: 'Add to list ',
-                  onTap: () async {
-                    if (_formKey.currentState!.validate()) {
-                      try {
-                        setState(() {
-                          isLoading = true;
-                        });
-                        User? user = FirebaseAuth.instance.currentUser;
-                        DocumentReference docRef =
-                            FirebaseFirestore.instance.collection('todo').doc();
-                        await docRef.set({
-                          'docid': docRef.id,
-                          'title': TitleController.text,
-                          'description': DescriptionController.text,
-                          'time': DateTime.now().toString(),
-                          "userid": user!.uid.toString()
-                        });
-                        setState(() {
-                          isLoading = false;
-                        });
-                        Get.to(AddToHome());
-                      } catch (e) {
-                        Get.snackbar('error', e.toString());
-                        setState(() {
-                          isLoading = false;
-                        });
-                      }
-                    }
-                  }),
+                  isLoading: isLoading, title: 'Add to list ', onTap: addto),
               SizedBox(
                 height: 40.h,
               ),
@@ -146,5 +117,34 @@ class _AddToDoState extends State<AddToDo> {
         ),
       ),
     );
+  }
+
+  Future addto() async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        setState(() {
+          isLoading = true;
+        });
+        User? user = FirebaseAuth.instance.currentUser;
+        DocumentReference docRef =
+            FirebaseFirestore.instance.collection('todo').doc();
+        await docRef.set({
+          'docid': docRef.id,
+          'title': TitleController.text,
+          'description': DescriptionController.text,
+          'time': DateTime.now().toString(),
+          "userid": user!.uid.toString()
+        });
+        setState(() {
+          isLoading = false;
+        });
+        Get.to(AddToHome());
+      } catch (e) {
+        Get.snackbar('error', e.toString());
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
   }
 }

@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:to_do_app/constant/app_colors.dart';
 import 'package:to_do_app/constant/app_icons.dart';
-import 'package:to_do_app/user/add_to_do.dart';
+import 'package:to_do_app/view/user/add_to_do.dart';
 import 'package:to_do_app/view/auth/signin_screen.dart';
 import 'package:to_do_app/widgets/button/common_button.dart';
 import 'package:to_do_app/widgets/fields/common_textfield.dart';
@@ -130,43 +130,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 height: 80.h,
               ),
               CommonButton(
-                  isLoading: isLoadingg,
-                  title: "Sign Up ",
-                  onTap: () async {
-                    try {
-                      if (_formKey.currentState!.validate()) {
-                        setState(() {
-                          isLoadingg = true;
-                        });
-                        User? user = FirebaseAuth.instance.currentUser;
-
-                        await FirebaseAuth.instance
-                            .createUserWithEmailAndPassword(
-                                email: EmailController.text,
-                                password: PasswordController.text);
-                        DocumentReference docRef = FirebaseFirestore.instance
-                            .collection('userprofile')
-                            .doc();
-                        await docRef.set({
-                          'email': EmailController.text,
-                          'name': NameController.text,
-                          "userid": user!.uid.toString(),
-                          'password': PasswordController.text,
-                          'image': '',
-                        });
-
-                        Get.to(() => AddToDo());
-                        setState(() {
-                          isLoadingg = false;
-                        });
-                      }
-                    } catch (e) {
-                      Get.snackbar('error', e.toString());
-                      setState(() {
-                        isLoadingg = false;
-                      });
-                    }
-                  }),
+                  isLoading: isLoadingg, title: "Sign Up ", onTap: signup),
               SizedBox(
                 height: 40.h,
               ),
@@ -202,5 +166,38 @@ class _SignupScreenState extends State<SignupScreen> {
         ),
       ),
     );
+  }
+
+  Future signup() async {
+    try {
+      if (_formKey.currentState!.validate()) {
+        setState(() {
+          isLoadingg = true;
+        });
+        User? user = FirebaseAuth.instance.currentUser;
+
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: EmailController.text, password: PasswordController.text);
+        DocumentReference docRef =
+            FirebaseFirestore.instance.collection('userprofile').doc();
+        await docRef.set({
+          'email': EmailController.text,
+          'name': NameController.text,
+          "userid": user!.uid.toString(),
+          'password': PasswordController.text,
+          'image': '',
+        });
+
+        Get.to(() => AddToDo());
+        setState(() {
+          isLoadingg = false;
+        });
+      }
+    } catch (e) {
+      Get.snackbar('error', e.toString());
+      setState(() {
+        isLoadingg = false;
+      });
+    }
   }
 }

@@ -85,27 +85,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
               SizedBox(
                 height: 40.h,
               ),
-              CommonButton(
-                title: "Forgot",
-                onTap: () async {
-                  try {
-                    if (_formKey.currentState!.validate()) {
-                      setState(() {
-                        isLoadingg = true;
-                      });
-                      await FirebaseAuth.instance
-                          .sendPasswordResetEmail(email: ForgetController.text);
-                      Get.to(() => SignupScreen());
-                      setState(() {
-                        isLoadingg = false;
-                      });
-                    }
-                  } catch (e) {
-                    Get.snackbar('Error', e.toString(),
-                        backgroundColor: Colors.red);
-                  }
-                },
-              ),
+              CommonButton(title: "Forgot", onTap: forget),
               SizedBox(
                 height: 40.h,
               ),
@@ -114,5 +94,23 @@ class _ForgetPasswordState extends State<ForgetPassword> {
         ),
       ),
     );
+  }
+
+  Future forget() async {
+    try {
+      if (_formKey.currentState!.validate()) {
+        setState(() {
+          isLoadingg = true;
+        });
+        await FirebaseAuth.instance
+            .sendPasswordResetEmail(email: ForgetController.text);
+        Get.to(() => SignupScreen());
+        setState(() {
+          isLoadingg = false;
+        });
+      }
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+    }
   }
 }
