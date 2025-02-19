@@ -5,9 +5,13 @@ class CommonTextfield extends StatefulWidget {
   final String? Function(String?)? validator;
   final String hintText;
   final TextEditingController controller;
+  final bool readOnly;
+  final IconData? suffixIcon;
 
   const CommonTextfield({
     super.key,
+    this.readOnly = false,
+    this.suffixIcon,
     required this.hintText,
     required this.controller,
     this.validator,
@@ -25,8 +29,10 @@ class _CommonTextfieldState extends State<CommonTextfield> {
       child: TextFormField(
         validator: widget.validator,
         controller: widget.controller,
+        readOnly: widget.readOnly,
         enabled: true,
         decoration: InputDecoration(
+          // suffixIcon: widget.suffixIcon,
           hintText: widget.hintText,
           hintStyle: TextStyle(
             fontFamily: "font",

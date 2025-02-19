@@ -10,6 +10,7 @@ import 'package:to_do_app/constant/app_images.dart';
 import 'package:to_do_app/view/user/add_to_do.dart';
 import 'package:to_do_app/view/user/detail_screen.dart';
 import 'package:to_do_app/utils/date&time_screen.dart';
+import 'package:to_do_app/view/user/profile_screen.dart';
 
 class AddToHome extends StatefulWidget {
   const AddToHome({super.key});
@@ -59,30 +60,35 @@ class _AddToHomeState extends State<AddToHome> {
                         snapshot.data!['name'] == '') {
                       return Text('Todo is not added');
                     } else {
-                      return Column(
-                        children: [
-                          Positioned(
-                            bottom: 120.h,
-                            child: CircleAvatar(
-                              radius: 60.r,
-                              backgroundColor: Color(0xff70968f),
-                              backgroundImage:
-                                  NetworkImage(snapshot.data!['image']),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 10.h),
-                            child: Text(
-                              "Welcome ${snapshot.data!['name']}",
-                              style: TextStyle(
-                                color: AppColors.color4,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 20.sp,
-                                fontFamily: "Poppins",
+                      return GestureDetector(
+                        onTap: () {
+                          Get.to(ProfileScreen());
+                        },
+                        child: Column(
+                          children: [
+                            Positioned(
+                              bottom: 120.h,
+                              child: CircleAvatar(
+                                radius: 60.r,
+                                backgroundColor: Color(0xff70968f),
+                                backgroundImage:
+                                    NetworkImage(snapshot.data!['image']),
                               ),
                             ),
-                          ),
-                        ],
+                            Padding(
+                              padding: EdgeInsets.only(top: 10.h),
+                              child: Text(
+                                "Welcome ${snapshot.data!['name']}",
+                                style: TextStyle(
+                                  color: AppColors.color4,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 20.sp,
+                                  fontFamily: "Poppins",
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       );
                     }
                   })

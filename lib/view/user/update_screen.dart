@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:to_do_app/constant/app_colors.dart';
 import 'package:to_do_app/constant/app_icons.dart';
 import 'package:to_do_app/widgets/button/common_button.dart';
-import 'package:to_do_app/widgets/fields/comon_textfield.dart';
+import 'package:to_do_app/widgets/fields/update_textfield.dart';
 
 class UpdateScreen extends StatefulWidget {
   const UpdateScreen({super.key});
@@ -57,7 +57,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
                 ),
                 Padding(
                     padding: EdgeInsets.only(left: 20.w, right: 20.w),
-                    child: CommonTextfield(
+                    child: UpdateTextfield(
                       controller: titleController,
                       textStyle: TextStyle(
                           color: AppColors.color3,
@@ -75,7 +75,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
                 Padding(
                     padding:
                         EdgeInsets.only(left: 20.w, right: 20.w, top: 10.h),
-                    child: CommonTextfield(
+                    child: UpdateTextfield(
                       controller: descriptionController,
                       textStyle: TextStyle(
                           fontWeight: FontWeight.w500,

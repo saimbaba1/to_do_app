@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class CommonTextfield extends StatelessWidget {
+class UpdateTextfield extends StatelessWidget {
   final TextEditingController controller;
   final TextInputType keyboardType;
   final TextStyle? textStyle;
-  const CommonTextfield({
+  const UpdateTextfield({
     super.key,
     required this.controller,
     this.keyboardType = TextInputType.text,
