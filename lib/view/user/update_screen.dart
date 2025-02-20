@@ -28,76 +28,80 @@ class _UpdateScreenState extends State<UpdateScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.color4,
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(
-                    top: 60.h,
-                    right: 350.w,
-                  ),
-                  child: GestureDetector(
-                    onTap: () {
-                      Get.back();
-                    },
-                    child: Icon(
-                      size: 34.h,
-                      AppIcons.back,
-                      color: AppColors.color3,
+    return AbsorbPointer(
+      absorbing: isLoadingg,
+      child: Scaffold(
+        backgroundColor: AppColors.color4,
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: 60.h,
+                      right: 350.w,
+                    ),
+                    child: GestureDetector(
+                      onTap: () {
+                        Get.back();
+                      },
+                      child: Icon(
+                        size: 34.h,
+                        AppIcons.back,
+                        color: AppColors.color3,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 30.h,
-                ),
-                Padding(
-                    padding: EdgeInsets.only(left: 20.w, right: 20.w),
-                    child: UpdateTextfield(
-                      controller: titleController,
-                      textStyle: TextStyle(
-                          color: AppColors.color3,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 20.sp,
-                          fontFamily: "Poppins"),
-                    )),
-                Padding(
-                  padding: EdgeInsets.only(left: 20.w, right: 20.w, top: 10.h),
-                  child: Divider(
-                    thickness: 1,
-                    color: AppColors.color1,
+                  SizedBox(
+                    height: 30.h,
                   ),
-                ),
-                Padding(
+                  Padding(
+                      padding: EdgeInsets.only(left: 20.w, right: 20.w),
+                      child: UpdateTextfield(
+                        controller: titleController,
+                        textStyle: TextStyle(
+                            color: AppColors.color3,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 20.sp,
+                            fontFamily: "Poppins"),
+                      )),
+                  Padding(
                     padding:
                         EdgeInsets.only(left: 20.w, right: 20.w, top: 10.h),
-                    child: UpdateTextfield(
-                      controller: descriptionController,
-                      textStyle: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15.sp,
-                          color: AppColors.color3,
-                          fontFamily: "Poppins"),
-                    )),
-              ],
-            ),
-            Padding(
-              padding: EdgeInsets.only(bottom: 30.h),
-              child: CommonButton(
-                title: "Update",
-                isLoading: isLoadingg,
-                onTap: () {
-                  final argument = Get.arguments;
-                  final String docid = argument['docid'];
-                  update(docid);
-                },
+                    child: Divider(
+                      thickness: 1,
+                      color: AppColors.color1,
+                    ),
+                  ),
+                  Padding(
+                      padding:
+                          EdgeInsets.only(left: 20.w, right: 20.w, top: 10.h),
+                      child: UpdateTextfield(
+                        controller: descriptionController,
+                        textStyle: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 15.sp,
+                            color: AppColors.color3,
+                            fontFamily: "Poppins"),
+                      )),
+                ],
               ),
-            )
-          ],
+              Padding(
+                padding: EdgeInsets.only(bottom: 30.h),
+                child: CommonButton(
+                  title: "Update",
+                  isLoading: isLoadingg,
+                  onTap: () {
+                    final argument = Get.arguments;
+                    final String docid = argument['docid'];
+                    update(docid);
+                  },
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

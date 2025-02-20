@@ -28,120 +28,88 @@ class _SigninScreenState extends State<SigninScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.color4,
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(
-                  top: 60.h,
-                  right: 324.w,
-                ),
-                child: GestureDetector(
-                  onTap: () {
-                    Get.back();
-                  },
-                  child: Icon(
-                    size: 34.h,
-                    AppIcons.back,
-                    color: AppColors.color3,
+    return AbsorbPointer(
+      absorbing: isLoadingg,
+      child: Scaffold(
+        backgroundColor: AppColors.color4,
+        body: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: 60.h,
+                    right: 324.w,
                   ),
-                ),
-              ),
-              SizedBox(
-                height: 79.h,
-              ),
-              Text(
-                "Welcome Back!",
-                style: TextStyle(
-                    color: AppColors.color3,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 20.sp,
-                    fontFamily: "Poppins"),
-              ),
-              SizedBox(
-                height: 21.h,
-              ),
-              Image.asset(AppImages.image2),
-              SizedBox(
-                height: 15.h,
-              ),
-              CommonTextfield(
-                hintText: "Enter your Email address",
-                controller: EmailController,
-                validator: (value) {
-                  if (value == '' || value == null) {
-                    return 'Please enter your email';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(
-                height: 20.h,
-              ),
-              CommonTextfield(
-                hintText: "Confirm Password",
-                controller: ComfirmPasswordController,
-                validator: (value) {
-                  if (value == '' || value == null) {
-                    return 'Please confirm your password';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(
-                height: 40.h,
-              ),
-              GestureDetector(
-                onTap: () {
-                  if (_formKey.currentState!.validate()) {
-                    Get.to(() => SigninScreen());
-                  }
-                },
-                child: GestureDetector(
-                  onTap: () {
-                    Get.to(() => ForgetPassword());
-                  },
-                  child: Text(
-                    textAlign: TextAlign.center,
-                    "Forgot Password ?",
-                    style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 15.sp,
-                        color: AppColors.color1,
-                        fontFamily: "Poppins"),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 40.h,
-              ),
-              CommonButton(
-                  isLoading: isLoadingg, title: "Sign Up ", onTap: sigin),
-              SizedBox(
-                height: 40.h,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    textAlign: TextAlign.center,
-                    "Dont have an account?",
-                    style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 15.sp,
-                        fontFamily: "Poppins"),
-                  ),
-                  GestureDetector(
+                  child: GestureDetector(
                     onTap: () {
-                      Get.to(() => SignupScreen());
+                      Get.back();
+                    },
+                    child: Icon(
+                      size: 34.h,
+                      AppIcons.back,
+                      color: AppColors.color3,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 79.h,
+                ),
+                Text(
+                  "Welcome Back!",
+                  style: TextStyle(
+                      color: AppColors.color3,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 20.sp,
+                      fontFamily: "Poppins"),
+                ),
+                SizedBox(
+                  height: 21.h,
+                ),
+                Image.asset(AppImages.image2),
+                SizedBox(
+                  height: 15.h,
+                ),
+                CommonTextfield(
+                  hintText: "Enter your Email address",
+                  controller: EmailController,
+                  validator: (value) {
+                    if (value == '' || value == null) {
+                      return 'Please enter your email';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(
+                  height: 20.h,
+                ),
+                CommonTextfield(
+                  hintText: "Confirm Password",
+                  controller: ComfirmPasswordController,
+                  validator: (value) {
+                    if (value == '' || value == null) {
+                      return 'Please confirm your password';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(
+                  height: 40.h,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    if (_formKey.currentState!.validate()) {
+                      Get.to(() => SigninScreen());
+                    }
+                  },
+                  child: GestureDetector(
+                    onTap: () {
+                      Get.to(() => ForgetPassword());
                     },
                     child: Text(
                       textAlign: TextAlign.center,
-                      " Sign Up",
+                      "Forgot Password ?",
                       style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 15.sp,
@@ -149,9 +117,44 @@ class _SigninScreenState extends State<SigninScreen> {
                           fontFamily: "Poppins"),
                     ),
                   ),
-                ],
-              ),
-            ],
+                ),
+                SizedBox(
+                  height: 40.h,
+                ),
+                CommonButton(
+                    isLoading: isLoadingg, title: "Sign Up ", onTap: sigin),
+                SizedBox(
+                  height: 40.h,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      textAlign: TextAlign.center,
+                      "Dont have an account?",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 15.sp,
+                          fontFamily: "Poppins"),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Get.to(() => SignupScreen());
+                      },
+                      child: Text(
+                        textAlign: TextAlign.center,
+                        " Sign Up",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 15.sp,
+                            color: AppColors.color1,
+                            fontFamily: "Poppins"),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

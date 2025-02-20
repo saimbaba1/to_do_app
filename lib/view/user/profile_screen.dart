@@ -18,19 +18,19 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final TextEditingController nameController = TextEditingController();
+  final String userid = FirebaseAuth.instance.currentUser!.uid;
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController imageController = TextEditingController();
   @override
   void initState() {
     super.initState();
     final arguments = Get.arguments ?? {};
     nameController.text = arguments['name'] ?? '';
     emailController.text = arguments['email'] ?? '';
-    imageController.text = arguments['image'] ?? '';
   }
 
   @override
   Widget build(BuildContext context) {
+    final arguments = Get.arguments;
     return Scaffold(
       backgroundColor: AppColors.color4,
       body: SingleChildScrollView(
@@ -53,26 +53,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 padding: EdgeInsets.only(left: 150.w, bottom: 30.h),
                 child: Row(
                   children: [
-                    StreamBuilder(
-                        stream: FirebaseFirestore.instance
-                            .collection('userprofile')
-                            .doc('ZZlyjVMaw7mhWYvKGOvL')
-                            .snapshots(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return CircularProgressIndicator();
-                          } else if (!snapshot.hasData ||
-                              snapshot.data!['image'] == '') {
-                            return Text('No Profile');
-                          } else {
-                            return CircleAvatar(
-                                radius: 60.r,
-                                backgroundColor: Color(0xff70968f),
-                                backgroundImage:
-                                    NetworkImage(snapshot.data!['image']));
-                          }
-                        }),
+                    CircleAvatar(
+                        radius: 60.r,
+                        backgroundColor: Color(0xff70968f),
+                        backgroundImage: NetworkImage(arguments['image'])),
                     Padding(
                       padding: EdgeInsets.only(bottom: 150.h, left: 80.w),
                       child: GestureDetector(
@@ -218,7 +202,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     try {
       await FirebaseFirestore.instance
           .collection('userprofile')
-          .doc('ZZlyjVMaw7mhWYvKGOvL')
+          .doc(userid)
           .update({
         'name': nameController.text,
       });
