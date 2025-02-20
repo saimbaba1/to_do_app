@@ -174,16 +174,17 @@ class _SignupScreenState extends State<SignupScreen> {
         setState(() {
           isLoadingg = true;
         });
-        User? user = FirebaseAuth.instance.currentUser;
 
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: EmailController.text, password: PasswordController.text);
+
+        final String userId = await FirebaseAuth.instance.currentUser!.uid;
         DocumentReference docRef =
-            FirebaseFirestore.instance.collection('userprofile').doc();
+            FirebaseFirestore.instance.collection('userprofile').doc(userId);
         await docRef.set({
           'email': EmailController.text,
           'name': NameController.text,
-          "userid": user!.uid.toString(),
+          "userid": userId.toString(),
           'password': PasswordController.text,
           'image': '',
         });

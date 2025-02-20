@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,169 +17,215 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final TextEditingController NameController = TextEditingController();
-  final TextEditingController EmailController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController imageController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    final arguments = Get.arguments ?? {};
+    nameController.text = arguments['name'] ?? '';
+    emailController.text = arguments['email'] ?? '';
+    imageController.text = arguments['image'] ?? '';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.color4,
-      body: Column(
-        children: [
-          Stack(alignment: Alignment.center, children: [
-            Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: AssetImage(
-                    AppImages.image4,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Stack(alignment: Alignment.center, children: [
+              Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: AssetImage(
+                      AppImages.image4,
+                    ),
                   ),
                 ),
+                height: 300.h,
+                width: double.infinity,
               ),
-              height: 300.h,
-              width: double.infinity,
+              Padding(
+                padding: EdgeInsets.only(left: 150.w, bottom: 30.h),
+                child: Row(
+                  children: [
+                    StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection('userprofile')
+                            .doc('ZZlyjVMaw7mhWYvKGOvL')
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          } else if (!snapshot.hasData ||
+                              snapshot.data!['image'] == '') {
+                            return Text('No Profile');
+                          } else {
+                            return CircleAvatar(
+                                radius: 60.r,
+                                backgroundColor: Color(0xff70968f),
+                                backgroundImage:
+                                    NetworkImage(snapshot.data!['image']));
+                          }
+                        }),
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 150.h, left: 80.w),
+                      child: GestureDetector(
+                        onTap: () {
+                          final argument = Get.arguments;
+                          final String userid = argument['userId'];
+                          save(userid);
+                        },
+                        child: Text(
+                          "Save",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 17.sp,
+                              color: AppColors.color2,
+                              fontFamily: "Poppins"),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ]),
+            Padding(
+              padding: EdgeInsets.only(right: 290.w, bottom: 10.h),
+              child: Text(
+                "Edit Profile",
+                style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 17.sp,
+                    color: AppColors.color1,
+                    fontFamily: "Poppins"),
+              ),
+            ),
+            CommonTextfield(
+              hintText: "",
+              suffixIcon: Icon(AppIcons.update),
+              controller: nameController,
+              validator: (value) {
+                if (value == '' || value == null) {
+                  return 'Please enter your Description';
+                }
+                return null;
+              },
+            ),
+            SizedBox(
+              height: 20.h,
+            ),
+            CommonTextfield(
+              hintText: "",
+              controller: emailController,
+              readOnly: true,
+              validator: (value) {
+                if (value == '' || value == null) {
+                  return 'Please enter your Description';
+                }
+                return null;
+              },
             ),
             Padding(
-              padding: EdgeInsets.only(left: 150.w, bottom: 30.h),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                      radius: 60.r,
-                      backgroundColor: Color(0xff70968f),
-                      backgroundImage: AssetImage(AppImages.image5)),
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 150.h, left: 80.w),
-                    child: GestureDetector(
-                      onTap: () {
-                        Get.back();
-                      },
-                      child: Text(
-                        "Save",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 17.sp,
-                            color: AppColors.color2,
-                            fontFamily: "Poppins"),
-                      ),
-                    ),
-                  )
-                ],
+              padding: EdgeInsets.only(right: 320.w, bottom: 40.h, top: 20.h),
+              child: Text(
+                "More",
+                style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 17.sp,
+                    color: AppColors.color1,
+                    fontFamily: "Poppins"),
               ),
             ),
-          ]),
-          Padding(
-            padding: EdgeInsets.only(right: 290.w, bottom: 10.h),
-            child: Text(
-              "Edit Profile",
-              style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 17.sp,
-                  color: AppColors.color1,
-                  fontFamily: "Poppins"),
-            ),
-          ),
-          CommonTextfield(
-            hintText: "Saim Baba",
-            controller: NameController,
-            validator: (value) {
-              if (value == '' || value == null) {
-                return 'Please enter your Description';
-              }
-              return null;
-            },
-          ),
-          SizedBox(
-            height: 20.h,
-          ),
-          CommonTextfield(
-            hintText: "saimbaba@gmail.com",
-            controller: NameController,
-            readOnly: true,
-            validator: (value) {
-              if (value == '' || value == null) {
-                return 'Please enter your Description';
-              }
-              return null;
-            },
-          ),
-          Padding(
-            padding: EdgeInsets.only(right: 320.w, bottom: 40.h, top: 20.h),
-            child: Text(
-              "More",
-              style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 17.sp,
-                  color: AppColors.color1,
-                  fontFamily: "Poppins"),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 30.w),
-            child: Row(
-              children: [
-                Icon(AppIcons.privacy),
-                Padding(
-                  padding: EdgeInsets.only(left: 5.w),
-                  child: Text(
-                    "Privacy Policy",
-                    style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 17.sp,
-                        color: AppColors.color3,
-                        fontFamily: "Poppins"),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 30.w, top: 15.h, bottom: 15.h),
-            child: Row(
-              children: [
-                Icon(AppIcons.terms),
-                Padding(
-                  padding: EdgeInsets.only(left: 5.w),
-                  child: Text(
-                    "Terms & Conditions",
-                    style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 17.sp,
-                        color: AppColors.color3,
-                        fontFamily: "Poppins"),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 30.w),
-            child: GestureDetector(
-              onTap: () {
-                FirebaseAuth.instance.signOut();
-                Get.to(SigninScreen());
-              },
+            Padding(
+              padding: EdgeInsets.only(left: 30.w),
               child: Row(
                 children: [
-                  Icon(
-                    AppIcons.logout,
-                    color: AppColors.color8,
-                  ),
+                  Icon(AppIcons.privacy),
                   Padding(
                     padding: EdgeInsets.only(left: 5.w),
                     child: Text(
-                      "Logout",
+                      "Privacy Policy",
                       style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 17.sp,
-                          color: AppColors.color8,
+                          color: AppColors.color3,
                           fontFamily: "Poppins"),
                     ),
                   ),
                 ],
               ),
             ),
-          ),
-        ],
+            Padding(
+              padding: EdgeInsets.only(left: 30.w, top: 15.h, bottom: 15.h),
+              child: Row(
+                children: [
+                  Icon(AppIcons.terms),
+                  Padding(
+                    padding: EdgeInsets.only(left: 5.w),
+                    child: Text(
+                      "Terms & Conditions",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 17.sp,
+                          color: AppColors.color3,
+                          fontFamily: "Poppins"),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 30.w),
+              child: GestureDetector(
+                onTap: () {
+                  FirebaseAuth.instance.signOut();
+                  Get.to(SigninScreen());
+                },
+                child: Row(
+                  children: [
+                    Icon(
+                      AppIcons.logout,
+                      color: AppColors.color8,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 5.w),
+                      child: Text(
+                        "Logout",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 17.sp,
+                            color: AppColors.color8,
+                            fontFamily: "Poppins"),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
+  }
+
+  Future save(String userid) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('userprofile')
+          .doc('ZZlyjVMaw7mhWYvKGOvL')
+          .update({
+        'name': nameController.text,
+      });
+
+      Get.back();
+    } catch (e) {
+      Get.snackbar('error', e.toString());
+    }
   }
 }

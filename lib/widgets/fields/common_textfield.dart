@@ -6,7 +6,7 @@ class CommonTextfield extends StatefulWidget {
   final String hintText;
   final TextEditingController controller;
   final bool readOnly;
-  final IconData? suffixIcon;
+  final Icon? suffixIcon;
 
   const CommonTextfield({
     super.key,
@@ -32,7 +32,7 @@ class _CommonTextfieldState extends State<CommonTextfield> {
         readOnly: widget.readOnly,
         enabled: true,
         decoration: InputDecoration(
-          // suffixIcon: widget.suffixIcon,
+          suffixIcon: widget.suffixIcon,
           hintText: widget.hintText,
           hintStyle: TextStyle(
             fontFamily: "font",
