@@ -1,12 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:to_do_app/constant/app_colors.dart';
 import 'package:to_do_app/constant/app_icons.dart';
 import 'package:to_do_app/constant/app_images.dart';
-import 'package:to_do_app/view/user/home_scree.dart';
+import 'package:to_do_app/controller/todo_controller.dart';
 import 'package:to_do_app/widgets/button/common_button.dart';
 import 'package:to_do_app/widgets/fields/common_textfield.dart';
 
@@ -18,15 +16,15 @@ class AddToDo extends StatefulWidget {
 }
 
 class _AddToDoState extends State<AddToDo> {
-  bool isLoading = false;
   final _formKey = GlobalKey<FormState>();
+  TodoController todoController = Get.put(TodoController());
 
   final TextEditingController TitleController = TextEditingController();
   final TextEditingController DescriptionController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return AbsorbPointer(
-      absorbing: isLoading,
+      absorbing: todoController.isLoading.value,
       child: Scaffold(
         backgroundColor: AppColors.color4,
         body: SingleChildScrollView(
@@ -109,8 +107,15 @@ class _AddToDoState extends State<AddToDo> {
                 SizedBox(
                   height: 40.h,
                 ),
-                CommonButton(
-                    isLoading: isLoading, title: 'Add to list ', onTap: addto),
+                Obx(
+                  () => CommonButton(
+                      isLoading: todoController.isLoading.value,
+                      title: 'Add to list ',
+                      onTap: () async {
+                        await todoController.addto(
+                            _formKey, TitleController, DescriptionController);
+                      }),
+                ),
                 SizedBox(
                   height: 40.h,
                 ),
@@ -120,34 +125,5 @@ class _AddToDoState extends State<AddToDo> {
         ),
       ),
     );
-  }
-
-  Future addto() async {
-    if (_formKey.currentState!.validate()) {
-      try {
-        setState(() {
-          isLoading = true;
-        });
-        User? user = FirebaseAuth.instance.currentUser;
-        DocumentReference docRef =
-            FirebaseFirestore.instance.collection('todo').doc();
-        await docRef.set({
-          'docid': docRef.id,
-          'title': TitleController.text,
-          'description': DescriptionController.text,
-          'time': DateTime.now().toString(),
-          "userid": user!.uid.toString()
-        });
-        setState(() {
-          isLoading = false;
-        });
-        Get.to(AddToHome());
-      } catch (e) {
-        Get.snackbar('error', e.toString());
-        setState(() {
-          isLoading = false;
-        });
-      }
-    }
   }
 }

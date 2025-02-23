@@ -12,7 +12,6 @@ class OnboardingScreen extends StatefulWidget {
   @override
   State<OnboardingScreen> createState() => _OnboardingScreenState();
 }
-  bool isLoadingg = false;
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
@@ -51,7 +50,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: CommonButton(
                 title: 'Get Started',
                 onTap: () {
-                
                   Get.to(() => SignupScreen());
                 },
               ),

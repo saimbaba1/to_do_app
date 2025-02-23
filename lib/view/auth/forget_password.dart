@@ -1,12 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:to_do_app/constant/app_colors.dart';
 import 'package:to_do_app/constant/app_icons.dart';
 import 'package:to_do_app/constant/app_images.dart';
+import 'package:to_do_app/controller/auth_controller.dart';
 import 'package:to_do_app/view/auth/signin_screen.dart';
-import 'package:to_do_app/view/auth/signup_screen.dart';
 import 'package:to_do_app/widgets/button/common_button.dart';
 import 'package:to_do_app/widgets/fields/common_textfield.dart';
 
@@ -19,9 +18,9 @@ class ForgetPassword extends StatefulWidget {
 
 class _ForgetPasswordState extends State<ForgetPassword> {
   final _formKey = GlobalKey<FormState>();
+  AuthController authController = Get.put(AuthController());
 
   final TextEditingController ForgetController = TextEditingController();
-  bool isLoadingg = false;
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +84,15 @@ class _ForgetPasswordState extends State<ForgetPassword> {
               SizedBox(
                 height: 40.h,
               ),
-              CommonButton(title: "Forgot", onTap: forget),
+              Obx(
+                () => CommonButton(
+                    title: "Forgot",
+                    isLoading: authController.isLoading.value,
+                    onTap: () async {
+                      await authController.forgetPassword(
+                          _formKey, ForgetController);
+                    }),
+              ),
               SizedBox(
                 height: 40.h,
               ),
@@ -94,23 +101,5 @@ class _ForgetPasswordState extends State<ForgetPassword> {
         ),
       ),
     );
-  }
-
-  Future forget() async {
-    try {
-      if (_formKey.currentState!.validate()) {
-        setState(() {
-          isLoadingg = true;
-        });
-        await FirebaseAuth.instance
-            .sendPasswordResetEmail(email: ForgetController.text);
-        Get.to(() => SignupScreen());
-        setState(() {
-          isLoadingg = false;
-        });
-      }
-    } catch (e) {
-      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
-    }
   }
 }

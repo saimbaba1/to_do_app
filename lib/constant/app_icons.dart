@@ -8,4 +8,8 @@ class AppIcons {
   static const IconData privacy = Icons.privacy_tip_outlined;
   static const IconData terms = Icons.note_alt_outlined;
   static const IconData logout = Icons.logout_outlined;
+  static const IconData checkCircle = Icons.check_circle;
+  static const IconData Warning = Icons.warning;
+
+  static const IconData error = Icons.error;
 }

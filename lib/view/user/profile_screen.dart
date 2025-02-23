@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:to_do_app/constant/app_colors.dart';
 import 'package:to_do_app/constant/app_icons.dart';
 import 'package:to_do_app/constant/app_images.dart';
+import 'package:to_do_app/controller/user_info_controller.dart';
+import 'package:to_do_app/utils/snackbar_util.dart';
 import 'package:to_do_app/view/auth/signin_screen.dart';
 import 'package:to_do_app/widgets/fields/common_textfield.dart';
 
@@ -17,6 +18,8 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  UserInfoController userInfoController = Get.put(UserInfoController());
+
   final TextEditingController nameController = TextEditingController();
   final String userid = FirebaseAuth.instance.currentUser!.uid;
   final TextEditingController emailController = TextEditingController();
@@ -61,9 +64,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       padding: EdgeInsets.only(bottom: 150.h, left: 80.w),
                       child: GestureDetector(
                         onTap: () {
-                          final argument = Get.arguments;
-                          final String userid = argument['userId'];
-                          save(userid);
+                          userInfoController.updateUSerInfo(nameController);
                         },
                         child: Text(
                           "Save",
@@ -179,13 +180,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: 5.w),
-                      child: Text(
-                        "Logout",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 17.sp,
-                            color: AppColors.color8,
-                            fontFamily: "Poppins"),
+                      child: GestureDetector(
+                        onTap: () async {
+                          try {
+                            await FirebaseAuth.instance.signOut();
+                            Get.to(SigninScreen());
+                          } catch (e) {
+                            SnackbarUtil.showError('Error signing out');
+                          }
+                        },
+                        child: Text(
+                          "Logout",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 17.sp,
+                              color: AppColors.color8,
+                              fontFamily: "Poppins"),
+                        ),
                       ),
                     ),
                   ],
@@ -196,20 +207,5 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
     );
-  }
-
-  Future save(String userid) async {
-    try {
-      await FirebaseFirestore.instance
-          .collection('userprofile')
-          .doc(userid)
-          .update({
-        'name': nameController.text,
-      });
-
-      Get.back();
-    } catch (e) {
-      Get.snackbar('error', e.toString());
-    }
   }
 }

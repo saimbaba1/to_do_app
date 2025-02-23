@@ -1,9 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:to_do_app/constant/app_colors.dart';
 import 'package:to_do_app/constant/app_icons.dart';
+import 'package:to_do_app/controller/todo_controller.dart';
 import 'package:to_do_app/widgets/button/common_button.dart';
 import 'package:to_do_app/widgets/fields/update_textfield.dart';
 
@@ -17,7 +17,8 @@ class UpdateScreen extends StatefulWidget {
 class _UpdateScreenState extends State<UpdateScreen> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
-  bool isLoadingg = false;
+  TodoController todoController = Get.put(TodoController());
+
   @override
   void initState() {
     super.initState();
@@ -28,8 +29,9 @@ class _UpdateScreenState extends State<UpdateScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final arguments = Get.arguments;
     return AbsorbPointer(
-      absorbing: isLoadingg,
+      absorbing: todoController.isLoading.value,
       child: Scaffold(
         backgroundColor: AppColors.color4,
         body: SingleChildScrollView(
@@ -89,44 +91,22 @@ class _UpdateScreenState extends State<UpdateScreen> {
                 ],
               ),
               Padding(
-                padding: EdgeInsets.only(bottom: 30.h),
-                child: CommonButton(
-                  title: "Update",
-                  isLoading: isLoadingg,
-                  onTap: () {
-                    final argument = Get.arguments;
-                    final String docid = argument['docid'];
-                    update(docid);
-                  },
-                ),
-              )
+                  padding: EdgeInsets.only(bottom: 30.h),
+                  child: Obx(
+                    () => CommonButton(
+                      title: "Update",
+                      isLoading: todoController.isLoading.value,
+                      onTap: () async {
+                        final String docId = arguments['docid'];
+                        await todoController.updates(
+                            docId, titleController, descriptionController);
+                      },
+                    ),
+                  ))
             ],
           ),
         ),
       ),
     );
-  }
-
-  Future update(String docId) async {
-    try {
-      setState(() {
-        isLoadingg = true;
-      });
-
-      await FirebaseFirestore.instance.collection('todo').doc(docId).update({
-        'title': titleController.text,
-        'description': descriptionController.text,
-      });
-
-      Get.back();
-      setState(() {
-        isLoadingg = false;
-      });
-    } catch (e) {
-      Get.snackbar('error', e.toString());
-      setState(() {
-        isLoadingg = false;
-      });
-    }
   }
 }

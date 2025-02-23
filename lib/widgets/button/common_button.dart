@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:to_do_app/constant/app_colors.dart';
+import 'package:to_do_app/utils/loading_util.dart';
 
 class CommonButton extends StatelessWidget {
   final String title;
@@ -23,9 +24,7 @@ class CommonButton extends StatelessWidget {
           color: AppColors.color1,
           alignment: Alignment.center,
           child: isLoading == true
-              ? CircularProgressIndicator(
-                  color: AppColors.color2,
-                )
+              ? LoadingUtil.buttonLoading()
               : Text(
                   title,
                   style: TextStyle(

@@ -1,11 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:to_do_app/constant/app_colors.dart';
 import 'package:to_do_app/constant/app_icons.dart';
-import 'package:to_do_app/view/user/add_to_do.dart';
+import 'package:to_do_app/controller/auth_controller.dart';
+import 'package:to_do_app/controller/user_info_controller.dart';
 import 'package:to_do_app/view/auth/signin_screen.dart';
 import 'package:to_do_app/widgets/button/common_button.dart';
 import 'package:to_do_app/widgets/fields/common_textfield.dart';
@@ -18,18 +17,19 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  AuthController authController = Get.put(AuthController());
+  UserInfoController userInfoController = Get.put(UserInfoController());
   final _formKey = GlobalKey<FormState>();
   final TextEditingController NameController = TextEditingController();
   final TextEditingController EmailController = TextEditingController();
   final TextEditingController PasswordController = TextEditingController();
   final TextEditingController ComfirmPasswordController =
       TextEditingController();
-  bool isLoadingg = false;
 
   @override
   Widget build(BuildContext context) {
     return AbsorbPointer(
-      absorbing: isLoadingg,
+      absorbing: authController.isLoading.value,
       child: Scaffold(
         backgroundColor: AppColors.color4,
         body: SingleChildScrollView(
@@ -131,8 +131,17 @@ class _SignupScreenState extends State<SignupScreen> {
                 SizedBox(
                   height: 80.h,
                 ),
-                CommonButton(
-                    isLoading: isLoadingg, title: "Sign Up ", onTap: signup),
+                Obx(
+                  () => CommonButton(
+                      isLoading: authController.isLoading.value,
+                      title: "Sign Up ",
+                      onTap: () async {
+                        await authController.signup(
+                            _formKey, EmailController, PasswordController);
+                        await userInfoController.addUserInfo(
+                            NameController, EmailController);
+                      }),
+                ),
                 SizedBox(
                   height: 40.h,
                 ),
@@ -169,39 +178,5 @@ class _SignupScreenState extends State<SignupScreen> {
         ),
       ),
     );
-  }
-
-  Future signup() async {
-    try {
-      if (_formKey.currentState!.validate()) {
-        setState(() {
-          isLoadingg = true;
-        });
-
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: EmailController.text, password: PasswordController.text);
-
-        final String userId = await FirebaseAuth.instance.currentUser!.uid;
-        DocumentReference docRef =
-            FirebaseFirestore.instance.collection('userprofile').doc(userId);
-        await docRef.set({
-          'email': EmailController.text,
-          'name': NameController.text,
-          "userid": userId.toString(),
-          'password': PasswordController.text,
-          'image': '',
-        });
-
-        Get.to(() => AddToDo());
-        setState(() {
-          isLoadingg = false;
-        });
-      }
-    } catch (e) {
-      Get.snackbar('error', e.toString());
-      setState(() {
-        isLoadingg = false;
-      });
-    }
   }
 }

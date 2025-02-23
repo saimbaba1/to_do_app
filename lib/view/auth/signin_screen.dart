@@ -1,11 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:to_do_app/constant/app_colors.dart';
 import 'package:to_do_app/constant/app_icons.dart';
 import 'package:to_do_app/constant/app_images.dart';
-import 'package:to_do_app/view/user/add_to_do.dart';
+import 'package:to_do_app/controller/auth_controller.dart';
 import 'package:to_do_app/view/auth/forget_password.dart';
 import 'package:to_do_app/view/auth/signup_screen.dart';
 import 'package:to_do_app/widgets/button/common_button.dart';
@@ -20,16 +19,16 @@ class SigninScreen extends StatefulWidget {
 
 class _SigninScreenState extends State<SigninScreen> {
   final _formKey = GlobalKey<FormState>();
+  AuthController authController = Get.put(AuthController());
 
   final TextEditingController EmailController = TextEditingController();
   final TextEditingController ComfirmPasswordController =
       TextEditingController();
-  bool isLoadingg = false;
 
   @override
   Widget build(BuildContext context) {
     return AbsorbPointer(
-      absorbing: isLoadingg,
+      absorbing: authController.isLoading.value,
       child: Scaffold(
         backgroundColor: AppColors.color4,
         body: SingleChildScrollView(
@@ -121,8 +120,16 @@ class _SigninScreenState extends State<SigninScreen> {
                 SizedBox(
                   height: 40.h,
                 ),
-                CommonButton(
-                    isLoading: isLoadingg, title: "Sign Up ", onTap: sigin),
+                Obx(
+                  () => CommonButton(
+                    isLoading: authController.isLoading.value,
+                    title: "Sign In",
+                    onTap: () async {
+                      await authController.signin(
+                          _formKey, EmailController, ComfirmPasswordController);
+                    },
+                  ),
+                ),
                 SizedBox(
                   height: 40.h,
                 ),
@@ -159,28 +166,5 @@ class _SigninScreenState extends State<SigninScreen> {
         ),
       ),
     );
-  }
-
-  Future sigin() async {
-    try {
-      if (_formKey.currentState!.validate()) {
-        setState(() {
-          isLoadingg = true;
-        });
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
-            email: EmailController.text,
-            password: ComfirmPasswordController.text);
-        Get.to(() => AddToDo());
-        setState(() {
-          isLoadingg = false;
-        });
-      }
-    } catch (e) {
-      print(e.toString());
-      Get.snackbar("error", e.toString());
-      setState(() {
-        isLoadingg = false;
-      });
-    }
   }
 }
