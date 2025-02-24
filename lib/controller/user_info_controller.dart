@@ -2,15 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:to_do_app/models/user_model.dart';
 import 'package:to_do_app/utils/snackbar_util.dart';
 
 class UserInfoController extends GetxController {
   RxBool isLoading = false.obs;
-
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  RxList<UserModel> userInfoList = <UserModel>[].obs;
   Future addUserInfo(TextEditingController nameController,
       TextEditingController emailController) async {
     isLoading.value = true;
@@ -45,6 +43,22 @@ class UserInfoController extends GetxController {
       SnackbarUtil.showSuccess('Profile updated successfully');
     } catch (e) {
       SnackbarUtil.showError('Error updating profile'.toString());
+    }
+  }
+
+  Future userprofile() async {
+    try {
+      isLoading.value = true;
+      String userId = FirebaseAuth.instance.currentUser!.uid;
+      DocumentSnapshot documentSnapshot =
+          await _firestore.collection('userprofile').doc(userId).get();
+      UserModel data = UserModel.fromFirestore(documentSnapshot);
+      userInfoList.assignAll([data]);
+      return data;
+    } catch (e) {
+      print("No Profile: $e");
+    } finally {
+      isLoading.value = false;
     }
   }
 }

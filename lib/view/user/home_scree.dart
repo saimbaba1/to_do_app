@@ -118,87 +118,91 @@ class _AddToHomeState extends State<AddToHome> {
               ),
             ),
           ),
-          StreamBuilder(
-            stream: FirebaseFirestore.instance
-                .collection('todo')
-                .where('userid', isEqualTo: userId)
-                .snapshots(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return LoadingUtil.shimmerTile(itemcount: 8);
-              } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                return Text('Todo is not added');
+          Obx(
+            () {
+              if (todoController.isLoading.value == true) {
+                return LoadingUtil.shimmerTile(itemcount: 6);
+              } else if (todoController.todoList.isEmpty) {
+                return Text('No todo available');
               } else {
+                final data = todoController.todoList;
                 return Expanded(
-                  child: ListView.builder(
-                      itemCount: snapshot.data!.docs.length,
-                      shrinkWrap: true,
-                      itemBuilder: (BuildContext context, index) {
-                        return Padding(
-                          padding: EdgeInsets.only(
-                            left: 10.w,
-                            right: 10.w,
-                          ),
-                          child: Card(
-                            color: _getRandomColor(),
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15)),
-                            child: Padding(
-                              padding: EdgeInsets.only(top: 10.h, bottom: 10.h),
-                              child: ListTile(
-                                  onTap: () {
-                                    Get.to(DetailScreen(), arguments: {
-                                      'title': snapshot.data!.docs[index]
-                                          ['title'],
-                                      'description': snapshot.data!.docs[index]
-                                          ['description'],
-                                      'docid': snapshot.data!.docs[index]
-                                          ['docid'],
-                                    });
-                                  },
-                                  leading: GestureDetector(
-                                    onTap: () async {
-                                      await todoController.delete(
-                                        snapshot.data!.docs[index]['docid'],
-                                      );
+                  child: RefreshIndicator(
+                    color: AppColors.color9,
+                    backgroundColor: AppColors.color2,
+                    strokeWidth: 3.0,
+                    displacement: 40.0,
+                    edgeOffset: 20.0,
+                    onRefresh: () async {
+                      await todoController.fetchTodos();
+                    },
+                    child: ListView.builder(
+                        itemCount: data.length,
+                        shrinkWrap: true,
+                        itemBuilder: (BuildContext context, index) {
+                          return Padding(
+                            padding: EdgeInsets.only(
+                              left: 10.w,
+                              right: 10.w,
+                            ),
+                            child: Card(
+                              color: _getRandomColor(),
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15)),
+                              child: Padding(
+                                padding:
+                                    EdgeInsets.only(top: 10.h, bottom: 10.h),
+                                child: ListTile(
+                                    onTap: () {
+                                      Get.to(DetailScreen(), arguments: {
+                                        'title': data[index].title,
+                                        'description': data[index].description,
+                                        'docid': data[index].docid,
+                                      });
                                     },
-                                    child: CircleAvatar(
-                                      backgroundColor: AppColors.color8,
-                                      child: Icon(
-                                        AppIcons.delete,
-                                        color: AppColors.color4,
+                                    leading: GestureDetector(
+                                      onTap: () {
+                                        String docId = data[index].docid;
+                                        todoController.delete(docId);
+                                        todoController.fetchTodos();
+                                      },
+                                      child: CircleAvatar(
+                                        backgroundColor: AppColors.color8,
+                                        child: Icon(
+                                          AppIcons.delete,
+                                          color: AppColors.color4,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  title: Text(
-                                    snapshot.data!.docs[index]['title'],
-                                    style: TextStyle(
-                                        fontSize: 13,
-                                        fontFamily: "Poppins",
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  subtitle: Text(
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    snapshot.data!.docs[index]['description'],
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        fontFamily: "Poppins",
-                                        fontWeight: FontWeight.w700),
-                                  ),
-                                  trailing: Text(
+                                    title: Text(
+                                      data[index].title,
                                       style: TextStyle(
-                                          fontSize: 10,
+                                          fontSize: 13,
+                                          fontFamily: "Poppins",
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    subtitle: Text(
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      data[index].description,
+                                      style: TextStyle(
+                                          fontSize: 12,
                                           fontFamily: "Poppins",
                                           fontWeight: FontWeight.w700),
-                                      DateTimeUtil.formatTime(
-                                        snapshot.data!.docs[index]['time'],
-                                      ))),
+                                    ),
+                                    trailing: Text(
+                                        style: TextStyle(
+                                            fontSize: 10,
+                                            fontFamily: "Poppins",
+                                            fontWeight: FontWeight.w700),
+                                        DateTimeUtil.formatTime(
+                                            data[index].time))),
+                              ),
                             ),
-                          ),
-                        );
-                      }),
+                          );
+                        }),
+                  ),
                 );
               }
             },

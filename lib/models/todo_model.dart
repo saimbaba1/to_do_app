@@ -1,42 +1,39 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class TodoModel {
   String docid;
-  String userid;
+  String userId;
   String title;
   String description;
-  DateTime? createdAt;
+  String createdAt;
+  String time;
 
-  TodoModel({
-    required this.docid,
-    required this.userid,
-    required this.title,
-    required this.description,
-    this.createdAt,
-  });
+  TodoModel(
+      {required this.docid,
+      required this.userId,
+      required this.title,
+      required this.description,
+      required this.createdAt,
+      required this.time});
 
-  // Convert Firestore Document to TodoModel
-  factory TodoModel.fromFirestore(DocumentSnapshot doc) {
-    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+  // Convert Firestore document to Model
+  factory TodoModel.fromFirestore(Map<String, dynamic> data) {
     return TodoModel(
-      docid: data['docid'] ?? '',
-      userid: data['userid'] ?? '',
-      title: data['title'] ?? '',
-      description: data['description'] ?? '',
-      createdAt: data['createdAt'] != null
-          ? (data['createdAt'] as Timestamp).toDate()
-          : null,
-    );
+        docid: data['docid'] ?? '',
+        userId: data['userId'] ?? '',
+        title: data['title'] ?? '',
+        description: data['description'] ?? '',
+        createdAt: data['createdAt'] ?? '',
+        time: data['time'] ?? '');
   }
 
   // Convert TodoModel to Firestore Document
   Map<String, dynamic> toFirestore() {
     return {
       'docid': docid,
-      'userid': userid,
+      'userId': userId,
       'title': title,
       'description': description,
-      'createdAt': createdAt != null ? Timestamp.fromDate(createdAt!) : null,
+      'createdAt': createdAt,
     };
   }
 }

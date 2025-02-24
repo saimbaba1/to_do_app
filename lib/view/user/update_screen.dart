@@ -100,6 +100,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
                         final String docId = arguments['docid'];
                         await todoController.updates(
                             docId, titleController, descriptionController);
+                        todoController.fetchTodos();
                       },
                     ),
                   ))

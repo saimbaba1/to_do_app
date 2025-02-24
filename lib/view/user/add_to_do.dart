@@ -17,10 +17,11 @@ class AddToDo extends StatefulWidget {
 
 class _AddToDoState extends State<AddToDo> {
   final _formKey = GlobalKey<FormState>();
-  TodoController todoController = Get.put(TodoController());
 
   final TextEditingController TitleController = TextEditingController();
   final TextEditingController DescriptionController = TextEditingController();
+  TodoController todoController = Get.put(TodoController());
+
   @override
   Widget build(BuildContext context) {
     return AbsorbPointer(
@@ -112,8 +113,9 @@ class _AddToDoState extends State<AddToDo> {
                       isLoading: todoController.isLoading.value,
                       title: 'Add to list ',
                       onTap: () async {
-                        await todoController.addto(
+                        todoController.addto(
                             _formKey, TitleController, DescriptionController);
+                            todoController.fetchTodos();
                       }),
                 ),
                 SizedBox(
