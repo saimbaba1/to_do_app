@@ -83,7 +83,7 @@ class TodoController extends GetxController {
 
       QuerySnapshot snapshot = await _firestore
           .collection('todo')
-          .where('userid', isEqualTo: userId)
+          .where('userId', isEqualTo: userId)
           .get();
 
       List<TodoModel> fetchedTodos = snapshot.docs.map((doc) {

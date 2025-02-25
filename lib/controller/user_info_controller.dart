@@ -9,6 +9,7 @@ class UserInfoController extends GetxController {
   RxBool isLoading = false.obs;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   RxList<UserModel> userInfoList = <UserModel>[].obs;
+
   Future addUserInfo(TextEditingController nameController,
       TextEditingController emailController) async {
     isLoading.value = true;
@@ -19,7 +20,7 @@ class UserInfoController extends GetxController {
         userId: userId,
         name: nameController.text,
         email: emailController.text,
-        profileImage: '',
+        image: '',
       );
 
       await FirebaseFirestore.instance

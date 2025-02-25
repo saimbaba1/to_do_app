@@ -4,13 +4,13 @@ class UserModel {
   String userId;
   String name;
   String email;
-  String profileImage;
+  String image;
 
   UserModel({
     required this.userId,
     required this.name,
     required this.email,
-    required this.profileImage,
+    required this.image,
   });
 
   // Convert Firestore Document to UserModel
@@ -20,7 +20,7 @@ class UserModel {
       userId: data['userid'] ?? '',
       name: data['name'] ?? '',
       email: data['email'] ?? '',
-      profileImage: data['image'] ?? '',
+      image: data['image'] ?? '',
     );
   }
 
@@ -30,7 +30,7 @@ class UserModel {
       'userId': userId,
       'name': name,
       'email': email,
-      'image': profileImage,
+      'image': image,
     };
   }
 }

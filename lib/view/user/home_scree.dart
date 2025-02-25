@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,6 +8,7 @@ import 'package:to_do_app/constant/app_colors.dart';
 import 'package:to_do_app/constant/app_icons.dart';
 import 'package:to_do_app/constant/app_images.dart';
 import 'package:to_do_app/controller/todo_controller.dart';
+import 'package:to_do_app/controller/user_info_controller.dart';
 import 'package:to_do_app/utils/loading_util.dart';
 import 'package:to_do_app/view/user/add_to_do.dart';
 import 'package:to_do_app/view/user/detail_screen.dart';
@@ -26,6 +26,7 @@ class _AddToHomeState extends State<AddToHome> {
   final Random _random = Random();
   final arguments = Get.arguments;
   TodoController todoController = Get.put(TodoController());
+  UserInfoController userInfoController = Get.put(UserInfoController());
 
   Color _getRandomColor() {
     List<Color> colors = [AppColors.color5, AppColors.color6, AppColors.color7];
@@ -33,6 +34,14 @@ class _AddToHomeState extends State<AddToHome> {
   }
 
   final String userId = FirebaseAuth.instance.currentUser!.uid;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    todoController.fetchTodos();
+    userInfoController.userprofile();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,55 +64,101 @@ class _AddToHomeState extends State<AddToHome> {
                 height: 300.h,
                 width: double.infinity,
               ),
-              StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection('userprofile')
-                      .doc(userId)
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
-                    } else if (!snapshot.hasData ||
-                        snapshot.data!['name'] == '') {
-                      return Text('Todo is not added');
-                    } else {
-                      return GestureDetector(
-                        onTap: () {
-                          Get.to(() => ProfileScreen(), arguments: {
-                            'name': snapshot.data!['name'],
-                            'image': snapshot.data!['image'],
-                            'userId': snapshot.data!['userid'],
-                            'email': snapshot.data!['email'],
-                          });
-                        },
-                        child: Column(
-                          children: [
-                            Positioned(
-                              bottom: 120.h,
-                              child: CircleAvatar(
-                                radius: 60.r,
-                                backgroundColor: Color(0xff70968f),
-                                backgroundImage:
-                                    NetworkImage(snapshot.data!['image']),
+              Obx(
+                () {
+                  if (userInfoController.isLoading.value == true) {
+                    return LoadingUtil.shimmerTile(itemcount: 6);
+                  } else if (userInfoController.userInfoList.isEmpty) {
+                    return Text('No profile');
+                  } else {
+                    final data = userInfoController.userInfoList;
+                    return GestureDetector(
+                      onTap: () {
+                        Get.to(() => ProfileScreen(), arguments: {
+                          'name': data.first.name,
+                          'image': data.first.image,
+                          'userId': data.first.userId,
+                          'email': data.first.email,
+                        });
+                      },
+                      child: Column(
+                        children: [
+                          Positioned(
+                            bottom: 120.h,
+                            child: CircleAvatar(
+                              radius: 60.r,
+                              backgroundColor: Color(0xff70968f),
+                              backgroundImage: NetworkImage(data.first.image),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 10.h),
+                            child: Text(
+                              "Welcome ${data.first.name}",
+                              style: TextStyle(
+                                color: AppColors.color4,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 20.sp,
+                                fontFamily: "Poppins",
                               ),
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 10.h),
-                              child: Text(
-                                "Welcome ${snapshot.data!['name']}",
-                                style: TextStyle(
-                                  color: AppColors.color4,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 20.sp,
-                                  fontFamily: "Poppins",
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-                  }),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                },
+              ),
+
+              // StreamBuilder(
+              //     stream: FirebaseFirestore.instance
+              //         .collection('userprofile')
+              //         .doc(userId)
+              //         .snapshots(),
+              //     builder: (context, snapshot) {
+              //       if (snapshot.connectionState == ConnectionState.waiting) {
+              //         return CircularProgressIndicator();
+              //       } else if (!snapshot.hasData ||
+              //           snapshot.data!['name'] == '') {
+              //         return Text('Todo is not added');
+              //       } else {
+              //         return GestureDetector(
+              //           onTap: () {
+              //             Get.to(() => ProfileScreen(), arguments: {
+              //               'name': snapshot.data!['name'],
+              //               'image': snapshot.data!['image'],
+              //               'userId': snapshot.data!['userid'],
+              //               'email': snapshot.data!['email'],
+              //             });
+              //           },
+              //           child: Column(
+              //             children: [
+              //               Positioned(
+              //                 bottom: 120.h,
+              //                 child: CircleAvatar(
+              //                   radius: 60.r,
+              //                   backgroundColor: Color(0xff70968f),
+              //                   backgroundImage:
+              //                       NetworkImage(snapshot.data!['image']),
+              //                 ),
+              //               ),
+              //               Padding(
+              //                 padding: EdgeInsets.only(top: 10.h),
+              //                 child: Text(
+              //                   "Welcome ${snapshot.data!['name']}",
+              //                   style: TextStyle(
+              //                     color: AppColors.color4,
+              //                     fontWeight: FontWeight.w600,
+              //                     fontSize: 20.sp,
+              //                     fontFamily: "Poppins",
+              //                   ),
+              //                 ),
+              //               ),
+              //             ],
+              //           ),
+              //         );
+              //       }
+              //     }),
             ],
           ),
           Padding(
@@ -220,6 +275,7 @@ class _AddToHomeState extends State<AddToHome> {
           ),
           onPressed: () {
             Get.to(AddToDo());
+            // todoController.fetchTodos();
           }),
     );
   }
