@@ -7,7 +7,12 @@ import 'package:to_do_app/constant/app_icons.dart';
 
 class SnackbarUtil {
   static void showSuccess(String message, {String title = "Success"}) {
-    _showSnackbar(title, message, AppColors.color2, AppIcons.checkCircle);
+    _showSnackbar(
+      title,
+      message,
+      AppColors.color1,
+      AppIcons.checkCircle,
+    );
   }
 
   static void showError(String message, {String title = "Error"}) {

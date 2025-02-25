@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:to_do_app/constant/app_colors.dart';
 import 'package:to_do_app/constant/app_icons.dart';
 import 'package:to_do_app/controller/todo_controller.dart';
+import 'package:to_do_app/models/todo_model.dart';
 import 'package:to_do_app/widgets/button/common_button.dart';
 import 'package:to_do_app/widgets/fields/update_textfield.dart';
 
@@ -22,14 +23,14 @@ class _UpdateScreenState extends State<UpdateScreen> {
   @override
   void initState() {
     super.initState();
-    final arguments = Get.arguments ?? {};
-    titleController.text = arguments['title'] ?? '';
-    descriptionController.text = arguments['description'] ?? '';
+    final TodoModel arguments = Get.arguments ?? {};
+    titleController.text = arguments.title ?? '';
+    descriptionController.text = arguments.description ?? '';
   }
 
   @override
   Widget build(BuildContext context) {
-    final arguments = Get.arguments;
+    final TodoModel arguments = Get.arguments;
     return AbsorbPointer(
       absorbing: todoController.isLoading.value,
       child: Scaffold(
@@ -91,13 +92,13 @@ class _UpdateScreenState extends State<UpdateScreen> {
                 ],
               ),
               Padding(
-                  padding: EdgeInsets.only(bottom: 30.h),
+                  padding: EdgeInsets.only(bottom: 30.h, top: 20.h),
                   child: Obx(
                     () => CommonButton(
                       title: "Update",
                       isLoading: todoController.isLoading.value,
                       onTap: () async {
-                        final String docId = arguments['docid'];
+                        final String docId = arguments.docid;
                         await todoController.updates(
                             docId, titleController, descriptionController);
                         todoController.fetchTodos();

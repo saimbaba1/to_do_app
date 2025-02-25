@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:to_do_app/constant/app_colors.dart';
 import 'package:to_do_app/constant/app_icons.dart';
+import 'package:to_do_app/models/todo_model.dart';
 import 'package:to_do_app/view/user/update_screen.dart';
 
 class DetailScreen extends StatefulWidget {
@@ -15,7 +16,7 @@ class DetailScreen extends StatefulWidget {
 class _DetailScreenState extends State<DetailScreen> {
   @override
   Widget build(BuildContext context) {
-    final arguments = Get.arguments;
+    final TodoModel arguments = Get.arguments;
 
     return Scaffold(
       backgroundColor: AppColors.color4,
@@ -41,11 +42,12 @@ class _DetailScreenState extends State<DetailScreen> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Get.to(UpdateScreen(), arguments: {
-                        'title': arguments['title'],
-                        'description': arguments['description'],
-                        'docid': arguments['docid'],
-                      });
+                      TodoModel todoModel = TodoModel(
+                          docid: arguments.docid,
+                          title: arguments.title,
+                          description: arguments.description,
+                          createdAt: arguments.createdAt);
+                      Get.to(UpdateScreen(), arguments: todoModel);
                     },
                     child: Icon(
                       size: 25.h,
@@ -62,7 +64,7 @@ class _DetailScreenState extends State<DetailScreen> {
             Padding(
               padding: EdgeInsets.only(right: 295.w),
               child: Text(
-                arguments['title'],
+                arguments.title,
                 style: TextStyle(
                     color: AppColors.color3,
                     fontWeight: FontWeight.w600,
@@ -80,7 +82,7 @@ class _DetailScreenState extends State<DetailScreen> {
             Padding(
               padding: EdgeInsets.only(left: 13.w, right: 13.w, top: 10.h),
               child: Text(
-                arguments['description'],
+                arguments.description,
                 style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 15.sp,

@@ -61,7 +61,8 @@ class AuthController extends GetxController {
             .sendPasswordResetEmail(email: emailController.text);
 
         Get.to(() => SigninScreen());
-        SnackbarUtil.showSuccess('Password reset link has been sent');
+        SnackbarUtil.showSuccess(
+            'Password reset link has been sent on your email');
       }
     } catch (e) {
       SnackbarUtil.showError(e.toString());

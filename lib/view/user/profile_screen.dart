@@ -4,8 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:to_do_app/constant/app_colors.dart';
 import 'package:to_do_app/constant/app_icons.dart';
-import 'package:to_do_app/constant/app_images.dart';
 import 'package:to_do_app/controller/user_info_controller.dart';
+import 'package:to_do_app/models/user_model.dart';
 import 'package:to_do_app/utils/snackbar_util.dart';
 import 'package:to_do_app/view/auth/signin_screen.dart';
 import 'package:to_do_app/widgets/fields/common_textfield.dart';
@@ -26,62 +26,50 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    final arguments = Get.arguments ?? {};
-    nameController.text = arguments['name'] ?? '';
-    emailController.text = arguments['email'] ?? '';
+    final UserModel arguments = Get.arguments ?? {};
+    nameController.text = arguments.name ?? '';
+    emailController.text = arguments.email ?? '';
   }
 
   @override
   Widget build(BuildContext context) {
-    final arguments = Get.arguments;
+    final UserModel arguments = Get.arguments;
     return Scaffold(
       backgroundColor: AppColors.color4,
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Stack(alignment: Alignment.center, children: [
-              Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: AssetImage(
-                      AppImages.image4,
+            Container(
+              decoration: BoxDecoration(color: AppColors.color1),
+              height: 300.h,
+              width: double.infinity,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      userInfoController.updateUSerInfo(nameController);
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 310.w, bottom: 20.h),
+                      child: Text(
+                        "Save",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 17.sp,
+                            color: AppColors.color2,
+                            fontFamily: "Poppins"),
+                      ),
                     ),
                   ),
-                ),
-                height: 300.h,
-                width: double.infinity,
+                  CircleAvatar(
+                      radius: 60.r,
+                      backgroundImage: NetworkImage(arguments.image)),
+                ],
               ),
-              Padding(
-                padding: EdgeInsets.only(left: 150.w, bottom: 30.h),
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                        radius: 60.r,
-                        backgroundColor: Color(0xff70968f),
-                        backgroundImage: NetworkImage(arguments['image'])),
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 150.h, left: 80.w),
-                      child: GestureDetector(
-                        onTap: () {
-                          userInfoController.updateUSerInfo(nameController);
-                        },
-                        child: Text(
-                          "Save",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 17.sp,
-                              color: AppColors.color2,
-                              fontFamily: "Poppins"),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ]),
+            ),
             Padding(
-              padding: EdgeInsets.only(right: 290.w, bottom: 10.h),
+              padding: EdgeInsets.only(right: 290.w, bottom: 10.h, top: 10.h),
               child: Text(
                 "Edit Profile",
                 style: TextStyle(

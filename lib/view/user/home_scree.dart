@@ -6,9 +6,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:to_do_app/constant/app_colors.dart';
 import 'package:to_do_app/constant/app_icons.dart';
-import 'package:to_do_app/constant/app_images.dart';
 import 'package:to_do_app/controller/todo_controller.dart';
 import 'package:to_do_app/controller/user_info_controller.dart';
+import 'package:to_do_app/models/todo_model.dart';
+import 'package:to_do_app/models/user_model.dart';
 import 'package:to_do_app/utils/loading_util.dart';
 import 'package:to_do_app/view/user/add_to_do.dart';
 import 'package:to_do_app/view/user/detail_screen.dart';
@@ -55,7 +56,7 @@ class _AddToHomeState extends State<AddToHome> {
             child: Obx(
               () {
                 if (userInfoController.isLoading.value == true) {
-                  return LoadingUtil.shimmerTile(itemcount: 6);
+                  return Center(child: Text('Loading...'));
                 } else if (userInfoController.userInfoList.isEmpty) {
                   return Text('No profile');
                 } else {
@@ -65,12 +66,12 @@ class _AddToHomeState extends State<AddToHome> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          Get.to(() => ProfileScreen(), arguments: {
-                            'name': data.first.name,
-                            'image': data.first.image,
-                            'userId': data.first.userId,
-                            'email': data.first.email,
-                          });
+                          UserModel userModel = UserModel(
+                              userId: data.first.userId,
+                              name: data.first.name,
+                              email: data.first.email,
+                              image: data.first.image);
+                          Get.to(() => ProfileScreen(), arguments: userModel);
                         },
                         child: CircleAvatar(
                           radius: 60.r,
@@ -115,7 +116,7 @@ class _AddToHomeState extends State<AddToHome> {
               if (todoController.isLoading.value == true) {
                 return LoadingUtil.shimmerTile(itemcount: 6);
               } else if (todoController.todoList.isEmpty) {
-                return Text('No todo available');
+                return Image.asset("assets/nodata.png");
               } else {
                 final data = todoController.todoList;
                 return Expanded(
@@ -137,11 +138,14 @@ class _AddToHomeState extends State<AddToHome> {
                               padding: EdgeInsets.only(top: 10.h, bottom: 10.h),
                               child: ListTile(
                                   onTap: () {
-                                    Get.to(DetailScreen(), arguments: {
-                                      'title': data[index].title,
-                                      'description': data[index].description,
-                                      'docid': data[index].docid,
-                                    });
+                                    TodoModel todoModel = TodoModel(
+                                      docid: data[index].docid,
+                                      title: data[index].title,
+                                      description: data[index].description,
+                                      createdAt: data[index].createdAt,
+                                    );
+                                    Get.to(DetailScreen(),
+                                        arguments: todoModel);
                                   },
                                   leading: GestureDetector(
                                     onTap: () async {

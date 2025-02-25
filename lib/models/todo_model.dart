@@ -1,24 +1,23 @@
-
 class TodoModel {
   String docid;
-  String userId;
+  String? userId;
   String title;
   String description;
   String createdAt;
-  String time;
+  String? time;
 
   TodoModel(
       {required this.docid,
-      required this.userId,
+      this.userId,
       required this.title,
       required this.description,
       required this.createdAt,
-      required this.time});
+      this.time});
 
   // Convert Firestore document to Model
   factory TodoModel.fromFirestore(Map<String, dynamic> data) {
     return TodoModel(
-        docid: data['docid'] ,
+        docid: data['docid'] ?? '',
         userId: data['userId'] ?? '',
         title: data['title'] ?? '',
         description: data['description'] ?? '',

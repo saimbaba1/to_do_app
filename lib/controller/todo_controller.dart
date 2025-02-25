@@ -92,7 +92,6 @@ class TodoController extends GetxController {
       todoList.assignAll(fetchedTodos);
     } catch (e) {
       print("Error fetching todos: $e");
-      todoList.clear();
     } finally {
       isLoading.value = false;
     }
