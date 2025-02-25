@@ -39,7 +39,6 @@ class _AddToHomeState extends State<AddToHome> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    todoController.fetchTodos();
     userInfoController.userprofile();
   }
 
@@ -49,117 +48,55 @@ class _AddToHomeState extends State<AddToHome> {
       backgroundColor: AppColors.color4,
       body: Column(
         children: [
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: AssetImage(
-                      AppImages.image4,
-                    ),
-                  ),
-                ),
-                height: 300.h,
-                width: double.infinity,
-              ),
-              Obx(
-                () {
-                  if (userInfoController.isLoading.value == true) {
-                    return LoadingUtil.shimmerTile(itemcount: 6);
-                  } else if (userInfoController.userInfoList.isEmpty) {
-                    return Text('No profile');
-                  } else {
-                    final data = userInfoController.userInfoList;
-                    return GestureDetector(
-                      onTap: () {
-                        Get.to(() => ProfileScreen(), arguments: {
-                          'name': data.first.name,
-                          'image': data.first.image,
-                          'userId': data.first.userId,
-                          'email': data.first.email,
-                        });
-                      },
-                      child: Column(
-                        children: [
-                          Positioned(
-                            bottom: 120.h,
-                            child: CircleAvatar(
-                              radius: 60.r,
-                              backgroundColor: Color(0xff70968f),
-                              backgroundImage: NetworkImage(data.first.image),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 10.h),
-                            child: Text(
-                              "Welcome ${data.first.name}",
-                              style: TextStyle(
-                                color: AppColors.color4,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 20.sp,
-                                fontFamily: "Poppins",
-                              ),
-                            ),
-                          ),
-                        ],
+          Container(
+            decoration: BoxDecoration(color: AppColors.color1),
+            height: 300.h,
+            width: double.infinity,
+            child: Obx(
+              () {
+                if (userInfoController.isLoading.value == true) {
+                  return LoadingUtil.shimmerTile(itemcount: 6);
+                } else if (userInfoController.userInfoList.isEmpty) {
+                  return Text('No profile');
+                } else {
+                  final data = userInfoController.userInfoList;
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Get.to(() => ProfileScreen(), arguments: {
+                            'name': data.first.name,
+                            'image': data.first.image,
+                            'userId': data.first.userId,
+                            'email': data.first.email,
+                          });
+                        },
+                        child: CircleAvatar(
+                          radius: 60.r,
+                          backgroundColor: Color(0xff70968f),
+                          backgroundImage: data.first.image == ''
+                              ? AssetImage("assets/dummy.png")
+                              : NetworkImage(data.first.image),
+                        ),
                       ),
-                    );
-                  }
-                },
-              ),
-
-              // StreamBuilder(
-              //     stream: FirebaseFirestore.instance
-              //         .collection('userprofile')
-              //         .doc(userId)
-              //         .snapshots(),
-              //     builder: (context, snapshot) {
-              //       if (snapshot.connectionState == ConnectionState.waiting) {
-              //         return CircularProgressIndicator();
-              //       } else if (!snapshot.hasData ||
-              //           snapshot.data!['name'] == '') {
-              //         return Text('Todo is not added');
-              //       } else {
-              //         return GestureDetector(
-              //           onTap: () {
-              //             Get.to(() => ProfileScreen(), arguments: {
-              //               'name': snapshot.data!['name'],
-              //               'image': snapshot.data!['image'],
-              //               'userId': snapshot.data!['userid'],
-              //               'email': snapshot.data!['email'],
-              //             });
-              //           },
-              //           child: Column(
-              //             children: [
-              //               Positioned(
-              //                 bottom: 120.h,
-              //                 child: CircleAvatar(
-              //                   radius: 60.r,
-              //                   backgroundColor: Color(0xff70968f),
-              //                   backgroundImage:
-              //                       NetworkImage(snapshot.data!['image']),
-              //                 ),
-              //               ),
-              //               Padding(
-              //                 padding: EdgeInsets.only(top: 10.h),
-              //                 child: Text(
-              //                   "Welcome ${snapshot.data!['name']}",
-              //                   style: TextStyle(
-              //                     color: AppColors.color4,
-              //                     fontWeight: FontWeight.w600,
-              //                     fontSize: 20.sp,
-              //                     fontFamily: "Poppins",
-              //                   ),
-              //                 ),
-              //               ),
-              //             ],
-              //           ),
-              //         );
-              //       }
-              //     }),
-            ],
+                      Padding(
+                        padding: EdgeInsets.only(top: 10.h),
+                        child: Text(
+                          "Welcome ${data.first.name}",
+                          style: TextStyle(
+                            color: AppColors.color4,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 20.sp,
+                            fontFamily: "Poppins",
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }
+              },
+            ),
           ),
           Padding(
             padding: EdgeInsets.only(right: 230.w, top: 10.h),
@@ -182,82 +119,71 @@ class _AddToHomeState extends State<AddToHome> {
               } else {
                 final data = todoController.todoList;
                 return Expanded(
-                  child: RefreshIndicator(
-                    color: AppColors.color9,
-                    backgroundColor: AppColors.color2,
-                    strokeWidth: 3.0,
-                    displacement: 40.0,
-                    edgeOffset: 20.0,
-                    onRefresh: () async {
-                      await todoController.fetchTodos();
-                    },
-                    child: ListView.builder(
-                        itemCount: data.length,
-                        shrinkWrap: true,
-                        itemBuilder: (BuildContext context, index) {
-                          return Padding(
-                            padding: EdgeInsets.only(
-                              left: 10.w,
-                              right: 10.w,
-                            ),
-                            child: Card(
-                              color: _getRandomColor(),
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15)),
-                              child: Padding(
-                                padding:
-                                    EdgeInsets.only(top: 10.h, bottom: 10.h),
-                                child: ListTile(
-                                    onTap: () {
-                                      Get.to(DetailScreen(), arguments: {
-                                        'title': data[index].title,
-                                        'description': data[index].description,
-                                        'docid': data[index].docid,
-                                      });
+                  child: ListView.builder(
+                      itemCount: data.length,
+                      shrinkWrap: true,
+                      itemBuilder: (BuildContext context, index) {
+                        return Padding(
+                          padding: EdgeInsets.only(
+                            left: 10.w,
+                            right: 10.w,
+                          ),
+                          child: Card(
+                            color: _getRandomColor(),
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15)),
+                            child: Padding(
+                              padding: EdgeInsets.only(top: 10.h, bottom: 10.h),
+                              child: ListTile(
+                                  onTap: () {
+                                    Get.to(DetailScreen(), arguments: {
+                                      'title': data[index].title,
+                                      'description': data[index].description,
+                                      'docid': data[index].docid,
+                                    });
+                                  },
+                                  leading: GestureDetector(
+                                    onTap: () async {
+                                      String docId = data[index].docid;
+                                      await todoController.delete(docId);
+                                      await todoController.fetchTodos();
                                     },
-                                    leading: GestureDetector(
-                                      onTap: () {
-                                        String docId = data[index].docid;
-                                        todoController.delete(docId);
-                                        todoController.fetchTodos();
-                                      },
-                                      child: CircleAvatar(
-                                        backgroundColor: AppColors.color8,
-                                        child: Icon(
-                                          AppIcons.delete,
-                                          color: AppColors.color4,
-                                        ),
+                                    child: CircleAvatar(
+                                      backgroundColor: AppColors.color8,
+                                      child: Icon(
+                                        AppIcons.delete,
+                                        color: AppColors.color4,
                                       ),
                                     ),
-                                    title: Text(
-                                      data[index].title,
+                                  ),
+                                  title: Text(
+                                    data[index].title,
+                                    style: TextStyle(
+                                        fontSize: 13,
+                                        fontFamily: "Poppins",
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  subtitle: Text(
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    data[index].description,
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontFamily: "Poppins",
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                  trailing: Text(
                                       style: TextStyle(
-                                          fontSize: 13,
-                                          fontFamily: "Poppins",
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    subtitle: Text(
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                      data[index].description,
-                                      style: TextStyle(
-                                          fontSize: 12,
+                                          fontSize: 10,
                                           fontFamily: "Poppins",
                                           fontWeight: FontWeight.w700),
-                                    ),
-                                    trailing: Text(
-                                        style: TextStyle(
-                                            fontSize: 10,
-                                            fontFamily: "Poppins",
-                                            fontWeight: FontWeight.w700),
-                                        DateTimeUtil.formatTime(
-                                            data[index].time))),
-                              ),
+                                      DateTimeUtil.formatTime(
+                                          data[index].createdAt))),
                             ),
-                          );
-                        }),
-                  ),
+                          ),
+                        );
+                      }),
                 );
               }
             },
@@ -275,7 +201,6 @@ class _AddToHomeState extends State<AddToHome> {
           ),
           onPressed: () {
             Get.to(AddToDo());
-            // todoController.fetchTodos();
           }),
     );
   }

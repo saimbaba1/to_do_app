@@ -89,10 +89,10 @@ class TodoController extends GetxController {
       List<TodoModel> fetchedTodos = snapshot.docs.map((doc) {
         return TodoModel.fromFirestore(doc.data() as Map<String, dynamic>);
       }).toList();
-      print(fetchedTodos.first.title);
       todoList.assignAll(fetchedTodos);
     } catch (e) {
       print("Error fetching todos: $e");
+      todoList.clear();
     } finally {
       isLoading.value = false;
     }
